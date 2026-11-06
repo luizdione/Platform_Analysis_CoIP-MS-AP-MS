@@ -34,12 +34,6 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Bio-Informatics",
 ]
 
-[project.urls]
-Homepage = "https://github.com/luizdione/Platform_Analysis_CoIP-MS-AP-MS"
-Repository = "https://github.com/luizdione/Platform_Analysis_CoIP-MS-AP-MS"
-Issues = "https://github.com/luizdione/Platform_Analysis_CoIP-MS-AP-MS/issues"
-Changelog = "https://github.com/luizdione/Platform_Analysis_CoIP-MS-AP-MS/blob/main/CHANGELOG.md"
-License = "https://github.com/luizdione/Platform_Analysis_CoIP-MS-AP-MS/blob/main/LICENSE"
 dependencies = [
     "numpy>=1.25",
     "pandas>=2.0",
@@ -61,6 +55,13 @@ dev = ["pytest>=7.0"]
 
 [project.scripts]
 bonder = "bonder.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/luizdione/Platform_Analysis_CoIP-MS-AP-MS"
+Repository = "https://github.com/luizdione/Platform_Analysis_CoIP-MS-AP-MS"
+Issues = "https://github.com/luizdione/Platform_Analysis_CoIP-MS-AP-MS/issues"
+Changelog = "https://github.com/luizdione/Platform_Analysis_CoIP-MS-AP-MS/blob/main/CHANGELOG.md"
+License = "https://github.com/luizdione/Platform_Analysis_CoIP-MS-AP-MS/blob/main/LICENSE"
 
 [tool.setuptools.packages.find]
 include = ["bonder*"]

@@ -1,0 +1,67 @@
+# =============================================================================
+# O que NUNCA entra na imagem de conteiner.
+# Primeiro: nada de dado de experimento, memoria de projeto ou credencial.
+# =============================================================================
+
+# --- git e metadados do repositorio ---
+.git
+.github
+.gitignore
+
+# --- notas e memoria de trabalho local (nao sao produto) ---
+.project-memory/
+*.local.md
+NOTAS_*.md
+
+# --- dados do usuario: entradas, bancos baixados e saidas de corrida ---
+data/
+runs/
+inputs/
+outputs/
+*.raw
+*.mzML
+*.mzml
+*.d/
+*.wiff
+*.parquet
+proteinGroups.txt
+report.tsv
+combined_protein.tsv
+
+# --- sequencias de iscas fornecidas pelo usuario ---
+config/sequences/*.fasta
+*.fasta
+*.fa
+
+# --- credenciais e configuracao local (tokens de deploy, chaves, etc.) ---
+.env
+.env.*
+.netrc
+*.pem
+*.key
+*.crt
+secrets/
+.*credentials*
+docker/docker-compose.local.yml
+
+# --- caches e artefatos de build ---
+**/__pycache__
+*.pyc
+*.pyo
+.pytest_cache
+.mypy_cache
+.ruff_cache
+*.egg-info
+build/
+dist/
+.venv
+venv
+
+# --- binarios externos vendored (baixados no build, nao copiados) ---
+vendor/bin/*
+!vendor/bin/.gitkeep
+
+# --- pesados/irrelevantes para a imagem ---
+docs/*.pdf
+*.zip
+*.tar.gz

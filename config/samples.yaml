@@ -1,0 +1,110 @@
+# =============================================================================
+# ARQUIVO DE EXEMPLO - substitua pelas suas amostras antes de rodar.
+#
+# Mapa de AMOSTRAS: reconcilia os nomes de coluna da matriz (derivados dos
+# basenames dos .raw) com a estrutura experimental. E consumido para montar
+# MSDataset.samples e para definir os contrastes isca-vs-controle no scoring.
+#
+# Os valores abaixo sao um EXEMPLO PUBLICO que acompanha config/baits.yaml:
+# nomes de amostra ficticios, nenhum dado de experimento real. Troque pelos
+# nomes das SUAS corridas - eles precisam casar com os nomes de coluna da sua
+# saida de busca (MaxQuant / DIA-NN / FragPipe).
+#
+# condition : rotulo curto do grupo (ex.: IP_NCAP, CTRL_NCAP)
+# bait_id   : id em baits.yaml, ou 'control' para os controles
+# role      : 'bait' (co-IP da isca) ou 'control' (IgG/mock/parental)
+# replicate : inteiro >= 1
+# raw_file  : nome do arquivo bruto/coluna correspondente na matriz
+#
+# Recomendacao de desenho (publicabilidade): >= 3 replicas biologicas por grupo
+# e um controle negativo pareado (IgG/mock/linhagem parental) por isca.
+# =============================================================================
+schema_version: 1
+
+samples:
+  # ---- Exemplo 1: isca exogena (NCAP_SARS2) ----
+  - sample: NCAP_IP_1
+    condition: IP_NCAP
+    bait_id: NCAP_SARS2
+    role: bait
+    replicate: 1
+    raw_file: NCAP_IP_1.raw
+  - sample: NCAP_IP_2
+    condition: IP_NCAP
+    bait_id: NCAP_SARS2
+    role: bait
+    replicate: 2
+    raw_file: NCAP_IP_2.raw
+  - sample: NCAP_IP_3
+    condition: IP_NCAP
+    bait_id: NCAP_SARS2
+    role: bait
+    replicate: 3
+    raw_file: NCAP_IP_3.raw
+  - sample: NCAP_CTRL_1
+    condition: CTRL_NCAP
+    bait_id: control
+    role: control
+    replicate: 1
+    raw_file: NCAP_CTRL_1.raw
+  - sample: NCAP_CTRL_2
+    condition: CTRL_NCAP
+    bait_id: control
+    role: control
+    replicate: 2
+    raw_file: NCAP_CTRL_2.raw
+  - sample: NCAP_CTRL_3
+    condition: CTRL_NCAP
+    bait_id: control
+    role: control
+    replicate: 3
+    raw_file: NCAP_CTRL_3.raw
+
+  # ---- Exemplo 2: isca com ortologo murino (TP53_HUMAN) ----
+  - sample: TP53_IP_1
+    condition: IP_TP53
+    bait_id: TP53_HUMAN
+    role: bait
+    replicate: 1
+    raw_file: TP53_IP_1.raw
+  - sample: TP53_IP_2
+    condition: IP_TP53
+    bait_id: TP53_HUMAN
+    role: bait
+    replicate: 2
+    raw_file: TP53_IP_2.raw
+  - sample: TP53_IP_3
+    condition: IP_TP53
+    bait_id: TP53_HUMAN
+    role: bait
+    replicate: 3
+    raw_file: TP53_IP_3.raw
+  - sample: TP53_CTRL_1
+    condition: CTRL_TP53
+    bait_id: control
+    role: control
+    replicate: 1
+    raw_file: TP53_CTRL_1.raw
+  - sample: TP53_CTRL_2
+    condition: CTRL_TP53
+    bait_id: control
+    role: control
+    replicate: 2
+    raw_file: TP53_CTRL_2.raw
+  - sample: TP53_CTRL_3
+    condition: CTRL_TP53
+    bait_id: control
+    role: control
+    replicate: 3
+    raw_file: TP53_CTRL_3.raw
+
+# Contrastes isca-vs-controle avaliados pelo scoring (SAINT/MSstats).
+contrasts:
+  - name: NCAP_vs_CTRL
+    bait_id: NCAP_SARS2
+    test: IP_NCAP
+    control: CTRL_NCAP
+  - name: TP53_vs_CTRL
+    bait_id: TP53_HUMAN
+    test: IP_TP53
+    control: CTRL_TP53

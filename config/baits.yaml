@@ -1,0 +1,73 @@
+# =============================================================================
+# ARQUIVO DE EXEMPLO - substitua pelas suas iscas antes de rodar.
+#
+# Definicao declarativa das ISCAS (baits) de um projeto. Os valores abaixo sao
+# um EXEMPLO PUBLICO e didatico, montado a partir de sequencias de referencia do
+# UniProt: este repositorio nao contem dados de experimento de ninguem.
+#
+# O exemplo cobre os dois casos que o pipeline trata de forma diferente:
+#
+#   1. Isca EXOGENA ao proteoma do hospedeiro, SEM ortologo no hospedeiro
+#      (desenho host-pathogen). SAINT + MiST; priorizacao por ortologia
+#      desligada.
+#   2. Isca de OUTRA especie COM ortologo no hospedeiro. O ortologo do
+#      hospedeiro e mantido DISTINTO da isca, para que a proteina do hospedeiro
+#      co-precipitada continue sendo um achado legitimo.
+#
+# As iscas nunca entram como preys no denominador do proteoma do hospedeiro no
+# scoring, e sao mantidas como linhas distintas.
+#
+# Para adaptar: troque os ids, os display_name, os acessos UniProt e os FASTA
+# (ver config/sequences/README.md) pelos da sua Co-IP.
+# =============================================================================
+schema_version: 1
+
+organism_sample:
+  name: Mus musculus
+  taxid: 10090
+
+baits:
+  # --- Exemplo 1: isca exogena sem ortologo murino (desenho host-pathogen) ----
+  # Nucleoproteina N do SARS-CoV-2 (UniProt P0DTC9). Usada aqui apenas como
+  # exemplo publico de isca viral: e um dos alvos do interactoma host-pathogen
+  # de Gordon et al., Nature 2020, o mesmo desenho que o MiST pontua.
+  - id: NCAP_SARS2
+    display_name: "Nucleoproteina N (SARS-CoV-2)"
+    source: viral
+    uniprot_accession: P0DTC9
+    fasta: sequences/NCAP_SARS2.fasta
+    # Cabecalho com que a isca aparece no FASTA de busca (search_db.fasta):
+    search_db_header: "sp|P0DTC9|NCAP_SARS2 Nucleoprotein OS=SARS-CoV-2 OX=2697049"
+    ortholog_prior: false            # sem ortologo murino -> prior DESLIGADO
+    scoring:
+      saint: true
+      mist: true                     # paradigma host-pathogen (Krogan lab)
+    notes: >
+      Isca exogena ao hospedeiro. Interatores esperados sao proteinas do
+      hospedeiro (camundongo). Sem ortologo murino: a priorizacao por ortologia
+      fica desabilitada; a priorizacao exploratoria por embeddings, se ligada,
+      usa novidade/outlier. Use esta entrada como modelo para qualquer isca
+      exogena (viral, bacteriana, construto sintetico ou etiqueta).
+
+  # --- Exemplo 2: isca de outra especie COM ortologo murino -------------------
+  # p53 humana (TP53, UniProt P04637), cujo ortologo murino Trp53 (P02340) deve
+  # permanecer DISTINTO da isca. Proteina de referencia muito anotada, escolhida
+  # so para ilustrar o tratamento do par isca/ortologo.
+  - id: TP53_HUMAN
+    display_name: "p53 (TP53, Homo sapiens)"
+    source: human
+    uniprot_accession: P04637
+    fasta: sequences/TP53_HUMAN.fasta
+    search_db_header: "sp|P04637|P53_HUMAN Cellular tumor antigen p53 OS=Homo sapiens OX=9606"
+    ortholog:
+      mouse_gene: Trp53
+      mouse_accession: P02340        # ortologo MURINO: manter DISTINTO da isca
+    ortholog_prior: true
+    scoring:
+      saint: true
+      mist: false
+    notes: >
+      Isca de outra especie. NAO colapsar com o ortologo murino Trp53 (P02340):
+      a sequencia humana e a isca (excluida do scoring de preys), mas o Trp53
+      murino co-precipitado e um achado legitimo (auto-associacao/interacao).
+      Peptideos compartilhados entre P04637 e P02340 devem ser sinalizados.

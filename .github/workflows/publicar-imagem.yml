@@ -1,0 +1,70 @@
+name: publicar imagem no GHCR
+
+# Publica a imagem de analise como pacote publico de contêiner, ligado a este
+# repositorio. Dispara so quando voce quer: numa release publicada ou no botao
+# "Run workflow". Nao dispara a cada push.
+#
+# Usa o GITHUB_TOKEN da propria Action (permissions: packages: write) - nao
+# precisa de token pessoal.
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag da imagem (ex.: 1.0.1). Vazio = 'latest' apenas."
+        required: false
+        default: ""
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Nome da imagem em minusculas
+        id: nome
+        run: echo "imagem=${REGISTRY}/$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Autenticar no GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Metadados (tags e labels)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ steps.nome.outputs.imagem }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=raw,value=${{ github.event.inputs.tag }},enable=${{ github.event.inputs.tag != '' }}
+            type=raw,value=latest
+          labels: |
+            org.opencontainers.image.title=Platform_Analysis_CoIP-MS-AP-MS
+            org.opencontainers.image.description=Plataforma local para analise de CoIP-MS / AP-MS e identificacao de parceiros de interacao no proteoma de camundongo.
+            org.opencontainers.image.licenses=LicenseRef-Platform_Analysis_CoIP-MS-AP-MS
+            org.opencontainers.image.authors=Luiz Dione Barbosa De-Melo <luiz.melo@ifrj.edu.br>
+
+      - name: Construir e publicar
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile.analysis
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

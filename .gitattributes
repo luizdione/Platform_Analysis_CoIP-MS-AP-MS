@@ -1,0 +1,28 @@
+# Normaliza fim de linha: o repositorio guarda LF; o checkout respeita o SO.
+* text=auto
+
+# Arquivos que rodam dentro de contêiner Linux: SEMPRE LF, inclusive em clone
+# no Windows (CRLF quebra shebang e heredoc dentro da imagem).
+Dockerfile*     text eol=lf
+*.sh            text eol=lf
+*.yml           text eol=lf
+*.yaml          text eol=lf
+Makefile        text eol=lf
+*.R             text eol=lf
+*.cff           text eol=lf
+
+# Scripts do Windows: CRLF.
+*.ps1           text eol=crlf
+*.bat           text eol=crlf
+*.cmd           text eol=crlf
+
+# Bibliotecas de terceiros: nao tocar (preserva byte a byte e o diff fica limpo).
+bonder/web/static/vendor/** -text -diff linguist-vendored
+
+# Binarios.
+*.png           binary
+*.ico           binary
+*.pdf           binary
+*.gz            binary
+*.zip           binary
+*.raw           binary

@@ -1,0 +1,48 @@
+name: testes
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  nucleo-cpu:
+    name: nucleo CPU (sem GPU, sem R)
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+
+      - name: Instalar o pacote e as dependencias de teste
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev,web,ms]"
+
+      - name: pytest
+        run: python -m pytest -q
+
+      - name: Autoteste do pipeline em dados sinteticos
+        env:
+          BONDER_OFFLINE: "1"
+        run: python -m bonder.cli selftest
+
+      - name: Conferir que nenhum dado de experimento foi versionado
+        run: |
+          set -eu
+          # A arvore publica nao deve conter memoria de projeto nem dados.
+          for p in .project-memory CLAUDE.md data runs inputs; do
+            if [ -e "$p" ]; then echo "ERRO: '$p' nao deve existir no repositorio"; exit 1; fi
+          done
+          if git ls-files | grep -E '\.(raw|mzML|mzml|fasta|fa)$'; then
+            echo "ERRO: arquivo de dados/sequencia versionado"; exit 1
+          fi
+          echo "ok: nenhum dado de experimento versionado"

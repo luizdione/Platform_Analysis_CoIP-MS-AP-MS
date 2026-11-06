@@ -1,0 +1,69 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bonder"
+version = "1.0.0"
+description = "Plataforma CoIP-MS / AP-MS para identificacao de parceiros de interacao no proteoma murino (orquestra SAINTexpress/MiST/DEP/limma/MSstats)."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [
+    { name = "Luiz Dione Barbosa De-Melo", email = "luiz.melo@ifrj.edu.br" },
+]
+maintainers = [
+    { name = "Luiz Dione Barbosa De-Melo", email = "luiz.melo@ifrj.edu.br" },
+]
+keywords = [
+    "proteomics", "interactomics", "AP-MS", "CoIP-MS", "interactome",
+    "protein-protein interaction", "mouse", "SAINTexpress", "MSstats",
+    "reproducible-research",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Web Environment",
+    "Framework :: Flask",
+    "Intended Audience :: Science/Research",
+    "License :: Other/Proprietary License",
+    "Natural Language :: Portuguese (Brazilian)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+
+[project.urls]
+Homepage = "https://github.com/luizdione/Platform_Analysis_CoIP-MS-AP-MS"
+Repository = "https://github.com/luizdione/Platform_Analysis_CoIP-MS-AP-MS"
+Issues = "https://github.com/luizdione/Platform_Analysis_CoIP-MS-AP-MS/issues"
+Changelog = "https://github.com/luizdione/Platform_Analysis_CoIP-MS-AP-MS/blob/main/CHANGELOG.md"
+License = "https://github.com/luizdione/Platform_Analysis_CoIP-MS-AP-MS/blob/main/LICENSE"
+dependencies = [
+    "numpy>=1.25",
+    "pandas>=2.0",
+    "pyarrow>=14",
+    "scipy>=1.11",
+    "networkx>=3.1",
+    "pyyaml>=6.0",
+    "requests>=2.31",
+    "matplotlib>=3.7",
+    "flask>=2.3",
+]
+
+[project.optional-dependencies]
+web = ["gunicorn>=21", "rq>=1.15", "redis>=5.0"]
+ms = ["pyteomics>=4.6"]
+annotate = ["gprofiler-official>=1.0"]
+gpu = ["torch>=2.3", "transformers>=4.40", "ms2rescore>=3.0", "peptdeep>=1.2"]
+dev = ["pytest>=7.0"]
+
+[project.scripts]
+bonder = "bonder.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["bonder*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

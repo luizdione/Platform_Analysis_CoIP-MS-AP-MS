@@ -38,11 +38,30 @@ jobs:
       - name: Conferir que nenhum dado de experimento foi versionado
         run: |
           set -eu
-          # A arvore publica nao deve conter memoria de projeto nem dados.
-          for p in .project-memory CLAUDE.md data runs inputs; do
-            if [ -e "$p" ]; then echo "ERRO: '$p' nao deve existir no repositorio"; exit 1; fi
+          erro=0
+
+          # 1. Diretorios de dados do usuario e de anotacao de trabalho: nunca versionados.
+          for p in .project-memory data runs inputs outputs; do
+            if [ -e "$p" ]; then
+              echo "ERRO: '$p' nao deve existir no repositorio"; erro=1
+            fi
           done
-          if git ls-files | grep -E '\.(raw|mzML|mzml|fasta|fa)$'; then
-            echo "ERRO: arquivo de dados/sequencia versionado"; exit 1
+
+          # 2. Dados brutos e sequencias: nunca versionados.
+          if git ls-files | grep -Ei '\.(raw|mzml|wiff|fasta|fa|faa)$'; then
+            echo "ERRO: arquivo de dados ou de sequencia versionado"; erro=1
           fi
-          echo "ok: nenhum dado de experimento versionado"
+
+          # 3. Markdown na raiz: so a documentacao do produto. Qualquer outro arquivo
+          #    de anotacao, memoria ou configuracao de ferramenta que apareca na raiz
+          #    e barrado aqui, sem precisar listar nomes um a um.
+          permitidos="README.md CHANGELOG.md THIRD_PARTY_NOTICES.md CONTRIBUTING.md CODE_OF_CONDUCT.md SECURITY.md"
+          for f in $(git ls-files --full-name -- '*.md' | grep -v '/' || true); do
+            case " $permitidos " in
+              *" $f "*) ;;
+              *) echo "ERRO: '$f' nao e documentacao do produto; mova para docs/ ou remova"; erro=1 ;;
+            esac
+          done
+
+          [ "$erro" -eq 0 ] || exit 1
+          echo "ok: nenhum dado de experimento nem anotacao de trabalho versionados"

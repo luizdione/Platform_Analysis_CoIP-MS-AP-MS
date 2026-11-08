@@ -244,13 +244,26 @@ suas próprias licenças, que **prevalecem** sobre esta quanto a elas. Ver
 
 ## Como citar
 
-Ver [`CITATION.cff`](CITATION.cff). Em trabalho de pesquisa autorizado, cite a
-plataforma com nome, versão e URL, e cite também as ferramentas efetivamente
-usadas — as versões de cada corrida estão no `manifest.json` dela.
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24063135.svg)](https://doi.org/10.5281/zenodo.24063135)
 
-> De-Melo, L.D.B. *Platform_Analysis_CoIP-MS-AP-MS* (v1.0.0). Instituto Federal
-> de Educação, Ciência e Tecnologia do Rio de Janeiro (IFRJ), 2026.
-> https://github.com/luizdione/Platform_Analysis_CoIP-MS-AP-MS
+Ver [`CITATION.cff`](CITATION.cff) — o botão **Cite this repository**, no alto da
+página do GitHub, gera a referência pronta em APA ou BibTeX.
+
+> De-Melo, L.D.B. (2026). *Platform_Analysis_CoIP-MS-AP-MS: a local, reproducible
+> platform for CoIP-MS / AP-MS interaction partner identification in the mouse
+> proteome* (v1.0.0). Instituto Federal de Educação, Ciência e Tecnologia do Rio
+> de Janeiro (IFRJ). Zenodo. https://doi.org/10.5281/zenodo.24063135
+
+**Qual DOI usar:**
+
+| DOI | Quando |
+|---|---|
+| `10.5281/zenodo.24063135` | **Esta versão (1.0.0).** Use num artigo: fixa exatamente o código que você rodou, que é o que um revisor precisa poder ver. |
+| `10.5281/zenodo.24063134` | **Conceito.** Resolve sempre para a versão mais recente. Use quando quiser apontar para a plataforma em geral, não para uma versão. |
+
+Cite também as **ferramentas efetivamente usadas** — as versões de cada corrida
+ficam no `manifest.json` dela, e as referências por etapa estão em
+[`docs/METODOLOGIA.md`](docs/METODOLOGIA.md).
 
 ## Autor
 

@@ -6,6 +6,9 @@ versionamento [SemVer](https://semver.org/lang/pt-BR/).
 
 ## [1.0.0] - 2026-11-06
 
+**DOI:** [10.5281/zenodo.24063135](https://doi.org/10.5281/zenodo.24063135)
+(conceito: [10.5281/zenodo.24063134](https://doi.org/10.5281/zenodo.24063134))
+
 Primeira versão publicada como **plataforma científica aberta**. O repositório
 passa a conter apenas a plataforma: nenhum dado de experimento, nenhum alvo real
 e nenhuma anotação de trabalho.

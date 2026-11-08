@@ -11,6 +11,16 @@ abstract: >-
 type: software
 version: "1.0.0"
 date-released: "2026-11-06"
+# DOI desta versao (fixa o conteudo da 1.0.0). O DOI de conceito,
+# 10.5281/zenodo.24063134, resolve sempre para a versao mais recente.
+doi: "10.5281/zenodo.24063135"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.24063135"
+    description: "DOI desta versao (1.0.0)"
+  - type: doi
+    value: "10.5281/zenodo.24063134"
+    description: "DOI de conceito: resolve sempre para a versao mais recente"
 authors:
   - family-names: "De-Melo"
     given-names: "Luiz Dione Barbosa"

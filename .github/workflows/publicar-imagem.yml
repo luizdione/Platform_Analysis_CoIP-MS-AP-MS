@@ -54,7 +54,7 @@ jobs:
             type=raw,value=latest
           labels: |
             org.opencontainers.image.title=Platform_Analysis_CoIP-MS-AP-MS
-            org.opencontainers.image.description=Plataforma local para analise de CoIP-MS / AP-MS e identificacao de parceiros de interacao no proteoma de camundongo.
+            org.opencontainers.image.description=Local platform for CoIP-MS / AP-MS analysis and identification of protein-protein interaction partners in the mouse proteome. Orchestrates published proteomics tools (SAINTexpress, MiST, DEP/limma/MSstats) in reproducible containers. Contains no experimental data.
             org.opencontainers.image.licenses=LicenseRef-Platform_Analysis_CoIP-MS-AP-MS
             org.opencontainers.image.authors=Luiz Dione Barbosa De-Melo <luiz.melo@ifrj.edu.br>
 

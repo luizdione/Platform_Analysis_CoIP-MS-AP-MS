@@ -1,53 +1,54 @@
-# Reprodutibilidade
+# Reproducibility
 
-Principios: nada silencioso, tudo rastreavel.
+Principles: nothing silent, everything traceable.
 
-## 1. Bancos fixados por versao + checksum
+## 1. Databases pinned by version + checksum
 
-`config/databases.yaml` fixa versao, URL e sha256 de cada fonte (UniProt release,
-STRING v12.0, BioGRID build, cRAP). O downloader:
+`config/databases.yaml` pins the version, URL and sha256 of each source (UniProt
+release, STRING v12.0, BioGRID build, cRAP). The downloader:
 
-- grava no cache content-addressed (`data/`, ou `BONDER_DATA_ROOT`);
-- mantem `data/registry.json` com url, sha256, tamanho e timestamp;
-- **falha** se o checksum divergir (nao re-baixa silenciosamente);
-- suporta **modo offline** (`BONDER_OFFLINE=1`): usa so o cache.
+- writes to a content-addressed cache (`data/`, or `BONDER_DATA_ROOT`);
+- keeps `data/registry.json` with url, sha256, size and timestamp;
+- **fails** if the checksum diverges (it does not silently re-download);
+- supports **offline mode** (`BONDER_OFFLINE=1`): cache only.
 
-Na primeira `bonder db sync`, preencha os `sha256_*` em `databases.yaml` com os
-hashes observados e faca commit — travando as versoes para sempre.
+On the first `bonder db sync`, fill in the `sha256_*` fields in `databases.yaml`
+with the observed hashes and commit them — pinning the versions for good.
 
-## 2. Manifesto por corrida
+## 2. One manifest per run
 
-Cada `runs/<run_id>/manifest.json` registra:
+Each `runs/<run_id>/manifest.json` records:
 
-- versao do `bonder`, Python e plataforma;
-- ferramentas externas disponiveis (SAINTexpress, Rscript, DIA-NN, ColabFold);
-- decisao de device (GPU/CPU) e o motivo;
-- proveniencia da ingesta (motor, aquisicao, tipo de quant, arquivos-fonte);
-- status de cada passo (ok/pulado/erro) — cobertura honesta.
+- the platform version, Python version and host platform;
+- the external tools available (SAINTexpress, Rscript, DIA-NN, ColabFold);
+- the device decision (GPU/CPU) and the reason for it;
+- the ingestion provenance (engine, acquisition, quant type, source files);
+- the status of every step (ok/skipped/error) — honest coverage.
 
-## 3. Sem instalacao silenciosa
+## 3. No silent installation
 
-`bonder/_deps.py`: dependencias faltantes levantam erro claro; auto-pip so com
-`BONDER_AUTO_PIP=1`. Conteineres fixam as versoes (conda env + wheels).
+`bonder/_deps.py`: missing dependencies raise a clear error; auto-pip only with
+`BONDER_AUTO_PIP=1`. The containers pin the versions (conda env + wheels).
 
-## 4. Determinismo
+## 4. Determinism
 
-- Ausente = NaN (nunca 0); MaxLFQ do DIA-NN nunca e re-normalizado.
-- Cache de embeddings ESM2 (se usado) chaveado por (sha256 da sequencia, modelo).
-- Sementes fixadas onde aplicavel.
+- Missing = NaN (never 0); DIA-NN MaxLFQ is never re-normalised.
+- The ESM2 embedding cache (when used) is keyed by (sequence sha256, model).
+- Seeds are fixed where applicable.
 
-## 5. Deposito de dados (exigido por revisores)
+## 5. Data deposition (reviewers will ask)
 
-- Deposite os **.raw** e resultados de busca no **ProteomeXchange via PRIDE**
+- Deposit the **.raw** files and search results in **ProteomeXchange via PRIDE**
   (https://www.ebi.ac.uk/pride/).
-- Inclua: parametros de busca, FASTA de busca (`data/search_db.fasta`), criterios
-  de FDR, desenho de replicas/controles e as **versoes** (do `manifest.json`).
-- Para AP-MS, reporte SAINT/MiST BFDR e limiares usados para chamar interatores.
+- Include: search parameters, the search FASTA (`data/search_db.fasta`), FDR
+  criteria, the replicate/control design and the **versions** (from
+  `manifest.json`).
+- For AP-MS, report SAINT/MiST BFDR and the thresholds used to call interactors.
 
-## 6. Checklist de submissao
+## 6. Submission checklist
 
-- [ ] `.raw` + saidas de busca no PRIDE (identificador ProteomeXchange)
-- [ ] `manifest.json` de cada contraste anexado como material suplementar
-- [ ] versoes de MaxQuant/FragPipe/DIA-NN, SAINTexpress, DEP/limma/MSstats
-- [ ] tabela de interatores com SAINT-score/BFDR e (quando houver) log2FC/FDR
-- [ ] rede de interacao (GraphML) e, se aplicavel, validacoes AF2-Multimer
+- [ ] `.raw` files + search outputs in PRIDE (ProteomeXchange identifier)
+- [ ] `manifest.json` for each contrast attached as supplementary material
+- [ ] versions of MaxQuant/FragPipe/DIA-NN, SAINTexpress, DEP/limma/MSstats
+- [ ] interactor table with SAINT score/BFDR and, where available, log2FC/FDR
+- [ ] interaction network (GraphML) and, if applicable, AF2-Multimer validations

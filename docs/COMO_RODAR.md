@@ -1,130 +1,132 @@
-# Como rodar o bonder (passo a passo)
+# How to run the platform (step by step)
 
-## Pre-requisitos
+## Prerequisites
 
-- Docker Desktop (Windows 11 + WSL2) ou Docker Engine (Linux).
-- Para GPU: NVIDIA Container Toolkit + driver compativel com CUDA 12.4.
-- Alternativa sem Docker: conda/miniforge com o ambiente do projeto
-  (`conda env create -f environment.yml`, cria o env `bonder`).
+- Docker Desktop (Windows 11 + WSL2) or Docker Engine (Linux).
+- For GPU: NVIDIA Container Toolkit + a driver compatible with CUDA 12.4.
+- Without Docker: conda/miniforge with the project environment
+  (`conda env create -f environment.yml`, creates the `bonder` env).
 
-## 1. Preparar iscas e bancos
+## 1. Prepare baits and databases
 
 ```bash
-# sequencias das iscas do exemplo publico (ver config/sequences/README.md)
+# bait sequences for the public example (see config/sequences/README.md)
 curl -L "https://rest.uniprot.org/uniprotkb/P0DTC9.fasta" -o config/sequences/NCAP_SARS2.fasta
 curl -L "https://rest.uniprot.org/uniprotkb/P04637.fasta" -o config/sequences/TP53_HUMAN.fasta
-# (para as SUAS iscas: edite config/baits.yaml e baixe/grave os FASTA correspondentes)
+# (for YOUR baits: edit config/baits.yaml and download/write the matching FASTA files)
 
-# baixar bancos murinos fixados por versao (uma vez)
+# download the version-pinned mouse databases (once)
 python -m bonder.cli db sync
-# validar iscas + montar o FASTA de busca combinado
+# validate the baits and build the combined search FASTA
 python -m bonder.cli baits check
 ```
 
-## 2. (Opcional) Gerar a saida de busca a partir dos .raw
+## 2. (Optional) Produce the search output from .raw files
 
-Se voce so tem os arquivos brutos:
+If all you have are the raw files:
 
-- **DDA:** rode MaxQuant ou FragPipe usando `data/search_db.fasta` -> obtenha
-  `proteinGroups.txt` (MaxQuant) ou `combined_protein.tsv` (FragPipe).
-- **DIA:** rode DIA-NN (GPU) -> obtenha `report.pg_matrix.tsv` (+ `report.tsv`).
-  No conteiner GPU:
+- **DDA:** run MaxQuant or FragPipe using `data/search_db.fasta` -> you get
+  `proteinGroups.txt` (MaxQuant) or `combined_protein.tsv` (FragPipe).
+- **DIA:** run DIA-NN (GPU) -> you get `report.pg_matrix.tsv` (+ `report.tsv`).
+  Inside the GPU container:
   ```bash
   docker compose -f docker/docker-compose.yml -f docker/docker-compose.gpu.yml \
-    run --rm gpu python -m bonder.gpu.tools   # wrappers DIA-NN/rescoring
+    run --rm gpu python -m bonder.gpu.tools   # DIA-NN/rescoring wrappers
   ```
 
-Coloque a saida em `./inputs/`.
+Put the output in `./inputs/`.
 
-## 3. Subir a plataforma
+## 3. Start the platform
 
 ```bash
-# CPU (sempre funciona)
+# CPU (always works)
 docker compose -f docker/docker-compose.yml up --build
 # GPU (NVIDIA)
 docker compose -f docker/docker-compose.yml -f docker/docker-compose.gpu.yml up --build
 ```
 
-Abra **http://localhost:8080**.
+Open **http://localhost:8080**.
 
-## 4. Rodar uma analise (dashboard)
+## 4. Run an analysis (dashboard)
 
-1. Informe o caminho da saida de busca, ex.: `/inputs/proteinGroups.txt`.
-2. Escolha o contraste (ex.: `NCAP_vs_CTRL` ou `TP53_vs_CTRL`).
-3. Clique **Rodar analise**. Acompanhe o status.
-4. Veja **Resumo/QC**, **Interatores** (tabela ranqueada por BFDR/FDR),
-   **Volcano** (se DEP rodou) e **Rede** (cytoscape).
+1. Give the path to the search output, e.g. `/inputs/proteinGroups.txt`.
+2. Pick the contrast (e.g. `NCAP_vs_CTRL` or `TP53_vs_CTRL`).
+3. Click **Rodar analise**. Follow the status.
+4. Inspect **Resumo/QC**, **Interatores** (table ranked by BFDR/FDR),
+   **Volcano** (if DEP ran) and **Rede** (cytoscape).
 
-## 4b. Rodar via CLI (headless / CI)
+## 4b. Run from the CLI (headless / CI)
 
 ```bash
 python -m bonder.cli run --input inputs/proteinGroups.txt --contrast NCAP_vs_CTRL
-# saidas em runs/<run_id>/: interactors.tsv, network.graphml, volcano.png,
-#                           results.json, manifest.json
+# outputs in runs/<run_id>/: interactors.tsv, network.graphml, volcano.png,
+#                            results.json, manifest.json
 ```
 
-## 5. Saidas
+## 5. Outputs
 
-- `interactors.tsv` — tabela ranqueada (prey, gene, SAINT/BFDR, log2FC/FDR,
-  background, confianca).
-- `network.graphml` / `network.json` — rede de interacao (Cytoscape/cytoscape.js).
-- `volcano.png` — volcano do DEP/limma.
-- `manifest.json` — reprodutibilidade (versoes/ferramentas/device/passos).
+- `interactors.tsv` — ranked table (prey, gene, SAINT/BFDR, log2FC/FDR,
+  background, confidence).
+- `network.graphml` / `network.json` — interaction network (Cytoscape/cytoscape.js).
+- `volcano.png` — volcano plot from DEP/limma.
+- `manifest.json` — reproducibility (versions/tools/device/steps).
 
-## Validar a pilha completa (SAINT + R rodando de verdade)
+## Validating the full stack (SAINT + R actually running)
 
-Depois de subir com Docker, rode o autoteste DENTRO do conteiner de analise
-(que tem R/Bioconductor e SAINTexpress):
+After starting with Docker, run the self-test INSIDE the analysis container
+(the one that has R/Bioconductor and SAINTexpress):
 
 ```bash
 docker compose -f docker/docker-compose.yml run --rm worker bonder selftest
 ```
 
-Saida esperada com a pilha completa:
+Expected output with the full stack:
 
 ```
 AUTOTESTE: PASSOU | candidatos: ~248
 passos: {... 'saint': 'ok', 'dep': 'ok', ...}
 ```
 
-- `dep: ok`  -> R/Bioconductor (DEP/limma) rodou de verdade.
-- `saint: ok` -> SAINTexpress rodou de verdade.
-- Se aparecer `saint: pulado`, o SAINTexpress nao compilou no build. Instalacao
-  manual (o release oficial e um tar.gz e compila com GSL):
+- `dep: ok`  -> R/Bioconductor (DEP/limma) really ran.
+- `saint: ok` -> SAINTexpress really ran.
+- If you see `saint: pulado` ("skipped"), SAINTexpress did not compile during the
+  build. Manual install (the official release is a tar.gz and builds with GSL):
   ```bash
-  # dentro de um conteiner/host Linux com g++ e libgsl-dev instalados:
+  # inside a Linux container/host with g++ and libgsl-dev installed:
   curl -fL -o saint.tgz "https://sourceforge.net/projects/saint-apms/files/SAINTexpress_v3.6.3__2018-03-09.tar.gz/download"
   tar xzf saint.tgz
   cd SAINTexpress_v3.6.3__2018-03-09/SAINTexpress-int && bash compile
-  # copie o binario 'SAINTexpress-int' gerado para um diretorio do PATH
-  # (ex.: monte um volume do host em /opt/bonder/bin, ja incluido no PATH).
+  # copy the resulting 'SAINTexpress-int' binary into a directory on PATH
+  # (e.g. mount a host volume at /opt/bonder/bin, which is already on PATH).
   ```
-  O pipeline passa a usa-lo automaticamente. DEP/limma NAO dependem disso.
+  The pipeline then picks it up automatically. DEP/limma do NOT depend on this.
 
-Em CPU puro (conda, sem Docker) o mesmo `python -m bonder.cli selftest` mostra
-`saint`/`dep` como `pulado` - esperado, pois SAINT/R vivem no conteiner.
+On plain CPU (conda, no Docker) the same `python -m bonder.cli selftest` reports
+`saint`/`dep` as `pulado` ("skipped") — expected, since SAINT and R live in the
+container.
 
-## Aba Manutencao (auditoria + autoteste)
+## Maintenance tab (audit + self-test)
 
-No dashboard, a aba **Manutencao** faz uma auditoria de sanidade:
+In the dashboard, the **Manutencao** ("Maintenance") tab runs a sanity audit:
 
-- dependencias Python (nucleo x opcionais) e suas versoes;
-- ferramentas externas no PATH (SAINTexpress, Rscript, DIA-NN, ColabFold, nvidia-smi);
-- pacotes R gold-standard (DEP/limma/MSstats) quando o Rscript existe;
-- GPU (device escolhido + VRAM livre) e config (iscas/contrastes/avisos);
-- bancos de referencia em cache + `search_db.fasta`; caminhos com escrita; corridas.
+- Python dependencies (core vs optional) and their versions;
+- external tools on PATH (SAINTexpress, Rscript, DIA-NN, ColabFold, nvidia-smi);
+- gold-standard R packages (DEP/limma/MSstats) when Rscript is present;
+- GPU (chosen device + free VRAM) and config (baits/contrasts/warnings);
+- cached reference databases + `search_db.fasta`; writable paths; recorded runs.
 
-O botao **Rodar autoteste** executa o pipeline em dados sinteticos (num diretorio
-temporario) e mostra o status de cada etapa e verificacao — a checagem de
-sanidade dos scripts e processos, sem depender de GPU nem de R. Tambem por API:
+The **Rodar autoteste** ("Run self-test") button executes the pipeline on
+synthetic data (in a temporary directory) and reports the status of every stage
+and check — the sanity check of the scripts and processes, with no dependency on
+GPU or R. Also available through the API:
 
 ```bash
 curl http://localhost:8080/api/health/full
 curl -X POST http://localhost:8080/api/health/selftest
 ```
 
-## Dicas de GPU (compartilhar com o Ollama)
+## GPU tips (sharing the card with a local LLM)
 
-O `gpu_gate` espera VRAM livre e ausencia de processo do LLM (Ollama/llama) antes
-de carregar etapas de GPU. Ajuste limiares em
+`gpu_gate` waits for free VRAM and for the absence of an LLM process
+(Ollama/llama) before loading GPU stages. Tune the thresholds in
 `config/gpu.yaml`.

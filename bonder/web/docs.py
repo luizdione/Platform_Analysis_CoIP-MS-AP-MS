@@ -15,15 +15,15 @@ from bonder.config import PROJECT_ROOT
 
 # Documentos curados (ordem e titulos amigaveis). path relativo a PROJECT_ROOT.
 CURATED: List[Dict[str, str]] = [
-    {"id": "visao-geral", "title": "Visao geral", "category": "Inicio", "path": "README.md"},
-    {"id": "como-rodar", "title": "Como rodar (tutorial)", "category": "Tutoriais", "path": "docs/COMO_RODAR.md"},
-    {"id": "sequencias", "title": "Sequencias das iscas", "category": "Tutoriais", "path": "config/sequences/README.md"},
-    {"id": "metodologia", "title": "Metodologia e citacoes", "category": "Ciencia", "path": "docs/METODOLOGIA.md"},
-    {"id": "reprodutibilidade", "title": "Reprodutibilidade", "category": "Ciencia", "path": "docs/REPRODUTIBILIDADE.md"},
-    {"id": "versionamento", "title": "Versionamento (CHANGELOG)", "category": "Projeto", "path": "CHANGELOG.md"},
-    {"id": "licenca", "title": "Licenca de uso", "category": "Projeto", "path": "LICENSE"},
-    {"id": "terceiros", "title": "Atribuicoes de terceiros", "category": "Projeto", "path": "THIRD_PARTY_NOTICES.md"},
-    {"id": "citacao", "title": "Como citar", "category": "Projeto", "path": "CITATION.cff"},
+    {"id": "visao-geral", "title": "Overview", "category": "Start", "path": "README.md"},
+    {"id": "como-rodar", "title": "How to run (tutorial)", "category": "Tutorials", "path": "docs/COMO_RODAR.md"},
+    {"id": "sequencias", "title": "Bait sequences", "category": "Tutorials", "path": "config/sequences/README.md"},
+    {"id": "metodologia", "title": "Methodology and citations", "category": "Science", "path": "docs/METODOLOGIA.md"},
+    {"id": "reprodutibilidade", "title": "Reproducibility", "category": "Science", "path": "docs/REPRODUTIBILIDADE.md"},
+    {"id": "versionamento", "title": "Changelog", "category": "Project", "path": "CHANGELOG.md"},
+    {"id": "licenca", "title": "Licence", "category": "Project", "path": "LICENSE"},
+    {"id": "terceiros", "title": "Third-party notices", "category": "Project", "path": "THIRD_PARTY_NOTICES.md"},
+    {"id": "citacao", "title": "How to cite", "category": "Project", "path": "CITATION.cff"},
 ]
 
 

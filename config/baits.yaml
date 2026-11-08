@@ -1,24 +1,23 @@
 # =============================================================================
-# ARQUIVO DE EXEMPLO - substitua pelas suas iscas antes de rodar.
+# EXAMPLE FILE - replace with your own baits before running.
 #
-# Definicao declarativa das ISCAS (baits) de um projeto. Os valores abaixo sao
-# um EXEMPLO PUBLICO e didatico, montado a partir de sequencias de referencia do
-# UniProt: este repositorio nao contem dados de experimento de ninguem.
+# Declarative definition of a project's BAITS. The values below are a PUBLIC,
+# teaching EXAMPLE built from UniProt reference sequences: this repository holds
+# no experimental data from anyone.
 #
-# O exemplo cobre os dois casos que o pipeline trata de forma diferente:
+# The example covers the two cases the pipeline treats differently:
 #
-#   1. Isca EXOGENA ao proteoma do hospedeiro, SEM ortologo no hospedeiro
-#      (desenho host-pathogen). SAINT + MiST; priorizacao por ortologia
-#      desligada.
-#   2. Isca de OUTRA especie COM ortologo no hospedeiro. O ortologo do
-#      hospedeiro e mantido DISTINTO da isca, para que a proteina do hospedeiro
-#      co-precipitada continue sendo um achado legitimo.
+#   1. A bait EXOGENOUS to the host proteome, with NO orthologue in the host
+#      (host-pathogen design). SAINT + MiST; orthology-based prioritisation off.
+#   2. A bait from ANOTHER SPECIES that DOES have a host orthologue. The host
+#      orthologue is kept DISTINCT from the bait, so that the co-precipitated
+#      host protein remains a legitimate finding.
 #
-# As iscas nunca entram como preys no denominador do proteoma do hospedeiro no
-# scoring, e sao mantidas como linhas distintas.
+# Baits never enter the scoring as preys in the host proteome denominator, and
+# are kept as separate rows.
 #
-# Para adaptar: troque os ids, os display_name, os acessos UniProt e os FASTA
-# (ver config/sequences/README.md) pelos da sua Co-IP.
+# To adapt: replace the ids, display_name values, UniProt accessions and FASTA
+# files (see config/sequences/README.md) with those of your own Co-IP.
 # =============================================================================
 schema_version: 1
 
@@ -27,32 +26,32 @@ organism_sample:
   taxid: 10090
 
 baits:
-  # --- Exemplo 1: isca exogena sem ortologo murino (desenho host-pathogen) ----
-  # Nucleoproteina N do SARS-CoV-2 (UniProt P0DTC9). Usada aqui apenas como
-  # exemplo publico de isca viral: e um dos alvos do interactoma host-pathogen
-  # de Gordon et al., Nature 2020, o mesmo desenho que o MiST pontua.
+  # --- Example 1: exogenous bait with no mouse orthologue (host-pathogen) -----
+  # SARS-CoV-2 nucleoprotein N (UniProt P0DTC9). Used here only as a public
+  # example of a viral bait: it is one of the targets in the host-pathogen
+  # interactome of Gordon et al., Nature 2020 - the same design MiST scores.
   - id: NCAP_SARS2
-    display_name: "Nucleoproteina N (SARS-CoV-2)"
+    display_name: "Nucleoprotein N (SARS-CoV-2)"
     source: viral
     uniprot_accession: P0DTC9
     fasta: sequences/NCAP_SARS2.fasta
-    # Cabecalho com que a isca aparece no FASTA de busca (search_db.fasta):
+    # Header under which the bait appears in the search FASTA (search_db.fasta):
     search_db_header: "sp|P0DTC9|NCAP_SARS2 Nucleoprotein OS=SARS-CoV-2 OX=2697049"
-    ortholog_prior: false            # sem ortologo murino -> prior DESLIGADO
+    ortholog_prior: false            # no mouse orthologue -> prior DISABLED
     scoring:
       saint: true
-      mist: true                     # paradigma host-pathogen (Krogan lab)
+      mist: true                     # host-pathogen paradigm (Krogan lab)
     notes: >
-      Isca exogena ao hospedeiro. Interatores esperados sao proteinas do
-      hospedeiro (camundongo). Sem ortologo murino: a priorizacao por ortologia
-      fica desabilitada; a priorizacao exploratoria por embeddings, se ligada,
-      usa novidade/outlier. Use esta entrada como modelo para qualquer isca
-      exogena (viral, bacteriana, construto sintetico ou etiqueta).
+      Bait exogenous to the host. The expected interactors are host (mouse)
+      proteins. With no mouse orthologue, orthology-based prioritisation is
+      disabled; exploratory embedding-based prioritisation, if enabled, falls
+      back to novelty/outlier. Use this entry as the template for any exogenous
+      bait: viral, bacterial, a synthetic construct or a tag.
 
-  # --- Exemplo 2: isca de outra especie COM ortologo murino -------------------
-  # p53 humana (TP53, UniProt P04637), cujo ortologo murino Trp53 (P02340) deve
-  # permanecer DISTINTO da isca. Proteina de referencia muito anotada, escolhida
-  # so para ilustrar o tratamento do par isca/ortologo.
+  # --- Example 2: bait from another species WITH a mouse orthologue ----------
+  # Human p53 (TP53, UniProt P04637), whose mouse orthologue Trp53 (P02340) must
+  # stay DISTINCT from the bait. A heavily annotated reference protein, chosen
+  # only to illustrate how the bait/orthologue pair is handled.
   - id: TP53_HUMAN
     display_name: "p53 (TP53, Homo sapiens)"
     source: human
@@ -61,13 +60,14 @@ baits:
     search_db_header: "sp|P04637|P53_HUMAN Cellular tumor antigen p53 OS=Homo sapiens OX=9606"
     ortholog:
       mouse_gene: Trp53
-      mouse_accession: P02340        # ortologo MURINO: manter DISTINTO da isca
+      mouse_accession: P02340        # MOUSE orthologue: keep DISTINCT from the bait
     ortholog_prior: true
     scoring:
       saint: true
       mist: false
     notes: >
-      Isca de outra especie. NAO colapsar com o ortologo murino Trp53 (P02340):
-      a sequencia humana e a isca (excluida do scoring de preys), mas o Trp53
-      murino co-precipitado e um achado legitimo (auto-associacao/interacao).
-      Peptideos compartilhados entre P04637 e P02340 devem ser sinalizados.
+      Bait from another species. Do NOT collapse it with the mouse orthologue
+      Trp53 (P02340): the human sequence is the bait (excluded from prey
+      scoring), but co-precipitated mouse Trp53 is a legitimate finding
+      (self-association/interaction). Peptides shared between P04637 and P02340
+      should be flagged.

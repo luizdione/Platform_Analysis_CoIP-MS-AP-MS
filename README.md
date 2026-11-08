@@ -1,274 +1,282 @@
 # Platform_Analysis_CoIP-MS-AP-MS
 
-**Plataforma local (navegador + Docker) para análise de CoIP-MS / AP-MS e
-identificação de parceiros de interação no proteoma de camundongo**
+**A local platform (browser + Docker) for CoIP-MS / AP-MS analysis and
+identification of protein–protein interaction partners in the mouse proteome**
 (*Mus musculus*, taxid 10090).
 
-A plataforma **não reinventa a roda**: ela **orquestra ferramentas consagradas e
-revisadas por pares** da comunidade de proteômica dentro de contêineres
-reprodutíveis, com um dashboard Flask acessível em `http://localhost:8080`.
-Resultado: rigor e reprodutibilidade compatíveis com publicação, rodando **no seu
-servidor**, sem software fechado/pago.
+This platform **does not reinvent the wheel**: it **orchestrates established,
+peer-reviewed tools** from the proteomics community inside reproducible
+containers, with a Flask dashboard served at `http://localhost:8080`. The result
+is rigour and reproducibility compatible with publication, running **on your own
+server**, with no closed or paid software.
 
-> **Este repositório não contém dados de experimento.** Os arquivos em `config/`
-> são um **exemplo público** montado só com sequências de referência do UniProt,
-> para servir de modelo. Os seus dados ficam na sua máquina, numa pasta que você
-> aponta (ver [Onde ficam os seus dados](#onde-ficam-os-seus-dados)) — e que não é
-> versionada nem entra na imagem de contêiner.
+> **This repository contains no experimental data.** The files under `config/`
+> are a **public example** built only from UniProt reference sequences, meant as a
+> template. Your data stays on your machine, in a folder you point to (see
+> [Where your data lives](#where-your-data-lives)) — it is never versioned and
+> never enters the container image.
 
-> O pacote Python e os módulos se chamam `bonder`, nome interno do projeto. O nome
-> da plataforma é o do repositório.
+> The Python package and its modules are named `bonder`, the project's internal
+> name. The platform's name is the repository's.
 
 ---
 
-## Por que open source tem rigor para publicar?
+## Why does open source have the rigour to publish?
 
-A proteômica de interação publicada em alto impacto roda majoritariamente em
-software **aberto**. O que confere publicabilidade não é a marca, e sim: usar
-métodos **validados e citáveis**, controle de **FDR** adequado, desenho com
-réplicas + controles, e **depósito dos dados brutos** (PRIDE/ProteomeXchange).
-O interactoma host–patógeno do SARS-CoV-2 (Gordon et al., *Nature* 2020) e o
-BioPlex foram feitos com estas mesmas ferramentas.
+High-impact interaction proteomics runs mostly on **open** software. What makes
+work publishable is not the brand, but: using **validated and citable** methods,
+proper **FDR** control, a design with replicates and controls, and **depositing
+the raw data** (PRIDE/ProteomeXchange). The SARS-CoV-2 host–pathogen interactome
+(Gordon et al., *Nature* 2020) and BioPlex were built with these same tools.
 
-## Ferramentas orquestradas (todas com artigo publicado)
+## Orchestrated tools (every one has a published paper)
 
-| Etapa | Ferramenta (aberta) |
+| Stage | Tool (open) |
 |---|---|
-| Busca/quantificação (raw → proteína) | **MaxQuant** (DDA) · **FragPipe/MSFragger** · **DIA-NN** (DIA, GPU) |
-| **Especificidade isca–presa** | **SAINTexpress** (todas as iscas) · **MiST** (host–patógeno, iscas exógenas) |
-| Quantitativo diferencial | **DEP / limma / MSstats** (R/Bioconductor) |
-| Background / contaminantes | **CRAPome** interno (controles) + cRAP |
-| Anotação / redes | **UniProt, STRING, BioGRID**, GO (g:Profiler), Cytoscape |
-| GPU (NVIDIA, opcional) | **DIA-NN**, **MS2Rescore + AlphaPeptDeep** (rescoring), **AlphaFold2-Multimer/ColabFold** (validação estrutural) |
+| Search/quantification (raw → protein) | **MaxQuant** (DDA) · **FragPipe/MSFragger** · **DIA-NN** (DIA, GPU) |
+| **Bait–prey specificity** | **SAINTexpress** (all baits) · **MiST** (host–pathogen, exogenous baits) |
+| Differential quantification | **DEP / limma / MSstats** (R/Bioconductor) |
+| Background / contaminants | internal **CRAPome** (controls) + cRAP |
+| Annotation / networks | **UniProt, STRING, BioGRID**, GO (g:Profiler), Cytoscape |
+| GPU (NVIDIA, optional) | **DIA-NN**, **MS2Rescore + AlphaPeptDeep** (rescoring), **AlphaFold2-Multimer/ColabFold** (structural validation) |
 
-> ESM2 (embeddings) entra apenas como **priorização exploratória suplementar**,
-> nunca como base do escore de confiança que vai para a figura principal.
+> ESM2 (embeddings) is used only as **supplementary exploratory prioritisation**,
+> never as the basis of the confidence score that goes into the main figure.
 
-Licenças e citações de cada uma: [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)
-e [`docs/METODOLOGIA.md`](docs/METODOLOGIA.md).
+Licences and citations for each tool: [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)
+and [`docs/METODOLOGIA.md`](docs/METODOLOGIA.md).
 
-## Arquitetura
+## Architecture
 
 ```
- navegador (localhost:8080)
+ browser (localhost:8080)
         |
-   [web] Flask ---- fila (Redis/RQ) ----> [worker]
+   [web] Flask ---- queue (Redis/RQ) ----> [worker]
                                              |
-   io -> db -> scoring(SAINT/MiST) -> stats(DEP/limma R) -> annotate -> pipeline -> relatorio
+   io -> db -> scoring(SAINT/MiST) -> stats(DEP/limma R) -> annotate -> pipeline -> report
                                              |
-                        [gpu] (opcional) DIA-NN / rescoring / AlphaFold / ESM2
+                        [gpu] (optional) DIA-NN / rescoring / AlphaFold / ESM2
 ```
 
-- **Fluxo unidirecional** `io -> db -> scoring/stats -> gpu -> pipeline -> web`.
-- O **núcleo científico é testável em CPU**, sem GPU e sem R (ver `tests/`).
-- Etapas cujas ferramentas externas faltam são **puladas com registro no
-  manifesto** — o pipeline nunca finge cobertura que não teve.
+- **One-way flow** `io -> db -> scoring/stats -> gpu -> pipeline -> web`.
+- The **scientific core is testable on CPU**, with no GPU and no R (see `tests/`).
+- Stages whose external tools are missing are **skipped and recorded in the
+  manifest** — the pipeline never claims coverage it did not have.
 
 ---
 
-## Como rodar
+## How to run
 
-### Opção 1 — imagem pronta do GHCR (sem build)
+### Option 1 — ready-made image from GHCR (no build)
 
 ```bash
 docker pull ghcr.io/luizdione/platform_analysis_coip-ms-ap-ms:latest
 ```
 
-Rode apontando a sua pasta de dados para `/inputs` (nada é enviado para fora da
-sua máquina):
+Run it pointing at your own data folder (nothing is sent off your machine):
 
 ```bash
-docker run --rm -p 8080:8080 -v "/caminho/para/seus/dados:/inputs:ro" ghcr.io/luizdione/platform_analysis_coip-ms-ap-ms:latest
+docker run --rm -p 8080:8080 -v "/path/to/your/data:/inputs:ro" ghcr.io/luizdione/platform_analysis_coip-ms-ap-ms:latest
 ```
 
-No PowerShell (Windows), use o caminho da sua pasta:
+On Windows PowerShell, use your folder's path:
 
 ```powershell
-docker run --rm -p 8080:8080 -v "C:\meus_dados\coip:/inputs:ro" ghcr.io/luizdione/platform_analysis_coip-ms-ap-ms:latest
+docker run --rm -p 8080:8080 -v "C:\my_data\coip:/inputs:ro" ghcr.io/luizdione/platform_analysis_coip-ms-ap-ms:latest
 ```
 
-Depois abra `http://localhost:8080`. Essa imagem sobe o dashboard sozinho (fila
-em thread, sem Redis) — suficiente para uso individual. Para a pilha completa com
-Redis e worker separado, use a opção 2.
+Then open `http://localhost:8080`. This image brings the dashboard up on its own
+(in-thread queue, no Redis) — enough for individual use. For the full stack with
+Redis and a separate worker, use option 2.
 
-### Opção 2 — compose a partir do código (pilha completa)
+### Option 2 — compose from source (full stack)
 
 ```bash
-# CPU (funciona em qualquer máquina):
+# CPU (works on any machine):
 docker compose -f docker/docker-compose.yml up --build
-#    -> abra http://localhost:8080
+#    -> open http://localhost:8080
 
-# Com GPU NVIDIA (requer NVIDIA Container Toolkit):
+# With an NVIDIA GPU (requires the NVIDIA Container Toolkit):
 docker compose -f docker/docker-compose.yml -f docker/docker-compose.gpu.yml up --build
 ```
 
-Coloque suas saídas de busca em `./inputs`. No dashboard: informe o caminho
-(`/inputs/proteinGroups.txt`), escolha o contraste (isca vs controle) e rode.
-O **motor e o modo de aquisição (DDA/DIA) são detectados automaticamente**.
+Put your search outputs in `./inputs`. In the dashboard: give the path
+(`/inputs/proteinGroups.txt`), pick the contrast (bait vs control) and run.
+The **search engine and acquisition mode (DDA/DIA) are detected automatically**.
 
-### Opção 3 — sem Docker (conda)
+### Option 3 — without Docker (conda)
 
 ```bash
-conda env create -f environment.yml      # cria o env 'bonder'
+conda env create -f environment.yml      # creates the 'bonder' env
 conda activate bonder
 pip install -e .
 python -m bonder.cli list-contrasts
-python -m bonder.web.app                 # dashboard em 127.0.0.1:8080
+python -m bonder.web.app                 # dashboard at 127.0.0.1:8080
 ```
 
-Para instalar num ambiente que você já tem:
-`conda env update -n SEU_ENV -f environment.yml`.
+To install into an environment you already have:
+`conda env update -n YOUR_ENV -f environment.yml`.
 
-No Windows há ainda `run.ps1` (Docker, CPU), `run-gpu.ps1` (Docker, GPU) e
-`iniciar_bonder.ps1` (sem Docker). Se o `python` do PATH não é o que tem as
-dependências, defina `BONDER_PYTHON` com o caminho completo do `python.exe`.
+On Windows there are also `run.ps1` (Docker, CPU), `run-gpu.ps1` (Docker, GPU) and
+`iniciar_bonder.ps1` (no Docker). If the `python` on your PATH is not the one with
+the dependencies, set `BONDER_PYTHON` to the full path of `python.exe`.
 
 ---
 
-## Onde ficam os seus dados
+## Where your data lives
 
-A plataforma lê e escreve **só onde você mandar**. Nada sai da sua máquina.
+The platform reads and writes **only where you tell it to**. Nothing leaves your
+machine.
 
-| O quê | Variável de ambiente | Padrão |
+| What | Environment variable | Default |
 |---|---|---|
-| Saídas de busca que você vai analisar | `BONDER_INPUTS_DIR` | `./inputs` (no Docker: montada em `/inputs`) |
-| Bancos de referência baixados (UniProt/STRING/BioGRID/cRAP) | `BONDER_DATA_ROOT` | `./data` (no Docker: `/data`, volume `bonder-data`) |
-| Resultados das corridas | `BONDER_RUNS_DIR` | `./runs` (no Docker: `/runs`, volume `bonder-runs`) |
-| Arquivos de configuração (os YAML) | `BONDER_CONFIG_DIR` | `./config` |
+| Search outputs you want to analyse | `BONDER_INPUTS_DIR` | `./inputs` (in Docker: mounted at `/inputs`) |
+| Downloaded reference databases (UniProt/STRING/BioGRID/cRAP) | `BONDER_DATA_ROOT` | `./data` (in Docker: `/data`, volume `bonder-data`) |
+| Run results | `BONDER_RUNS_DIR` | `./runs` (in Docker: `/runs`, volume `bonder-runs`) |
+| Configuration files (the YAMLs) | `BONDER_CONFIG_DIR` | `./config` |
 
 ```bash
-export BONDER_DATA_ROOT=/meu/disco/coip/data
-export BONDER_RUNS_DIR=/meu/disco/coip/runs
-export BONDER_INPUTS_DIR=/meu/disco/coip/inputs
+export BONDER_DATA_ROOT=/my/disk/coip/data
+export BONDER_RUNS_DIR=/my/disk/coip/runs
+export BONDER_INPUTS_DIR=/my/disk/coip/inputs
 ```
 
-Outras duas variáveis úteis: `BONDER_OFFLINE=1` usa só o cache de bancos já
-baixado (nenhuma chamada de rede), e `BONDER_REDIS_URL` liga a fila RQ/Redis —
-sem ela, a corrida roda numa thread do próprio processo, o que basta para uso
-individual.
+Two more useful variables: `BONDER_OFFLINE=1` uses only the already-downloaded
+database cache (no network calls), and `BONDER_REDIS_URL` enables the RQ/Redis
+queue — without it a run executes in a thread of the process itself, which is
+enough for individual use.
 
-Num `docker run` simples, `/data` e `/runs` ficam **dentro** do contêiner e se
-perdem ao removê-lo. Para guardar os resultados, monte volumes:
+In a plain `docker run`, `/data` and `/runs` live **inside** the container and are
+lost when it is removed. To keep results, mount volumes:
 
 ```bash
 docker run --rm -p 8080:8080 \
-  -v "/caminho/para/seus/dados:/inputs:ro" \
+  -v "/path/to/your/data:/inputs:ro" \
   -v "coip-data:/data" -v "coip-runs:/runs" \
   ghcr.io/luizdione/platform_analysis_coip-ms-ap-ms:latest
 ```
 
-`data/`, `runs/`, `inputs/` e `config/sequences/*.fasta` estão no `.gitignore` e
-no `.dockerignore`: **não são versionados e não entram na imagem**. Os seus dados
-de entrada e os resultados pertencem a quem os gerou.
+## Configuration (declarative)
 
-## Configuração (declarativa)
+The four files below define the analysis. The first two ship with a **public
+example** that you are meant to replace:
 
-Os quatro arquivos abaixo definem a análise. Os dois primeiros vêm com um
-**exemplo público** que você deve substituir:
-
-- `config/baits.yaml` — as iscas. O exemplo cobre os dois casos que o pipeline
-  trata de forma diferente: isca **exógena** ao hospedeiro, sem ortólogo murino
-  (host–patógeno), e isca de outra espécie **com** ortólogo murino, mantido
-  **distinto** da isca.
-- `config/samples.yaml` — amostras, réplicas e **contrastes** isca-vs-controle.
-  Os nomes precisam casar com as colunas da sua saída de busca.
-- `config/databases.yaml` — bancos murinos **fixados por versão** + checksums.
-- `config/gpu.yaml` — device, `gpu_gate` e toggles das etapas de GPU.
-- `config/sequences/` — FASTA das iscas (veja o README de lá). Não versionado.
+- `config/baits.yaml` — the baits. The example covers the two cases the pipeline
+  treats differently: a bait **exogenous** to the host with no mouse orthologue
+  (host–pathogen), and a bait from another species **with** a mouse orthologue,
+  which is kept **distinct** from the bait.
+- `config/samples.yaml` — samples, replicates and bait-vs-control **contrasts**.
+  The names must match the columns of your search output.
+- `config/databases.yaml` — mouse databases **pinned by version** + checksums.
+- `config/gpu.yaml` — device, `gpu_gate` and toggles for the GPU stages.
+- `config/sequences/` — bait FASTA files (see the README there). Not versioned.
 
 ## CLI
 
 ```bash
-bonder db sync            # baixa/verifica UniProt/STRING/contaminantes (murinos)
-bonder baits check        # valida iscas e monta o search_db.fasta
-bonder qc --input F       # resumo de QC de uma saída de busca
+bonder db sync            # download/verify UniProt/STRING/contaminants (mouse)
+bonder baits check        # validate baits and build search_db.fasta
+bonder qc --input F       # QC summary of a search output
 bonder run --input F --contrast NCAP_vs_CTRL
 ```
 
-## Reprodutibilidade
+## Reproducibility
 
-Cada corrida grava `manifest.json` (versões, ferramentas disponíveis, device,
-procedência, passos) e `results.json`. Bancos são **fixados por versão** e
-verificados por sha256. Ver [`docs/REPRODUTIBILIDADE.md`](docs/REPRODUTIBILIDADE.md)
-e o guia de depósito no PRIDE.
+Every run writes `manifest.json` (versions, available tools, device, provenance,
+steps) and `results.json`. Databases are **pinned by version** and verified by
+sha256. See [`docs/REPRODUTIBILIDADE.md`](docs/REPRODUTIBILIDADE.md) and the PRIDE
+deposition guide.
 
-## Testes
+## Tests
 
 ```bash
-python -m pytest -q     # núcleo CPU (IO, SAINT-format, pipeline e2e, web jobs)
+python -m pytest -q     # CPU core (IO, SAINT formatting, end-to-end pipeline, web jobs)
 ```
 
-## Requisitos
+## Requirements
 
-- **Mínimo:** Docker (Desktop no Windows/macOS, Engine no Linux). Nada mais.
-- **Sem Docker:** Python 3.10+ (testado em 3.11) e conda/miniforge.
-- **GPU (opcional):** placa NVIDIA com CUDA 12.4, driver compatível e NVIDIA
-  Container Toolkit. Toda etapa de GPU tem **fallback CPU garantido**.
-- **R (opcional):** fornecido pela imagem de análise; sem ele, o quantitativo
-  diferencial é pulado com registro no manifesto.
+- **Minimum:** Docker (Desktop on Windows/macOS, Engine on Linux). Nothing else.
+- **Without Docker:** Python 3.10+ (tested on 3.11) and conda/miniforge.
+- **GPU (optional):** an NVIDIA card with CUDA 12.4, a compatible driver and the
+  NVIDIA Container Toolkit. Every GPU stage has a **guaranteed CPU fallback**.
+- **R (optional):** provided by the analysis image; without it, differential
+  quantification is skipped and recorded in the manifest.
 
-Desenvolvido e testado em Windows 11 + WSL2 e em Linux.
+Developed and tested on Windows 11 + WSL2 and on Linux.
 
 ---
 
-## Licença
+## Licence
 
-**A licença mudou na versão 1.0.0.** Ver [`LICENSE`](LICENSE) para o texto que
-vale.
+**The licence changed in version 1.0.0.** See [`LICENSE`](LICENSE) for the terms
+that apply.
 
-| Uso | Condição |
+| Use | Condition |
 |---|---|
-| **Pessoal** (na sua máquina, sem fim econômico) | Livre, não precisa avisar |
-| **Ensino** (aulas, disciplinas, treinamentos, trabalho de aluno) | Livre, não precisa avisar |
-| **Pesquisa** (gerar/analisar dado para tese, artigo, pré-print, pôster, projeto) | **Só com autorização prévia do autor, por e-mail:** luiz.melo@ifrj.edu.br |
-| **Comercial** (serviço remunerado, consultoria, SaaS, uso empresarial) | Proibido — procure o autor para licença específica |
-| **Redistribuir, modificar, criar obra derivada** | Proibido sem autorização escrita |
+| **Personal** (on your machine, no economic purpose) | Free, no need to ask |
+| **Teaching** (classes, courses, training, student coursework) | Free, no need to ask |
+| **Research** (generating/analysing data for a thesis, article, preprint, poster, project) | **Only with the author's prior authorisation, by e-mail:** luiz.melo@ifrj.edu.br |
+| **Commercial** (paid services, consulting, SaaS, business use) | Not allowed — contact the author for a specific licence |
+| **Redistribution, modification, derivative works** | Not allowed without written authorisation |
 
-Executar a plataforma apenas para conhecê-la ou avaliá-la, sem gerar resultado de
-pesquisa, conta como uso pessoal e **não** precisa de autorização.
+Running the platform merely to get to know or evaluate it, without producing
+research results, counts as personal use and does **not** require authorisation.
 
-### Sobre a licença MIT anterior
+The `LICENSE` file is **bilingual**: an English translation followed by the
+Portuguese text. **In case of any divergence, the Portuguese text prevails** — it
+is the version the author adopted, it refers to Brazilian Law no. 9.609/98 and no.
+9.610/98 and elects the courts of Rio de Janeiro, and it is the text published
+with version 1.0.0.
 
-Até a versão 1.0.0 esta plataforma foi publicada sob **MIT**. A licença nova vale
-**desta versão em diante** e **não revoga a MIT para o que já foi publicado**:
-quem obteve uma cópia enquanto ela estava sob MIT mantém, sobre **aquela cópia**,
-todos os direitos que a MIT concedeu — inclusive usar, modificar e redistribuir.
-Uma licença já concedida não se retira.
+### About the previous MIT licence
 
-### Terceiros
+Up to version 1.0.0 this platform was released under **MIT**. The new licence
+applies **from that version onwards** and **does not revoke the MIT grant for what
+was already published**: anyone who obtained a copy while it was under MIT keeps,
+over **that copy**, all the rights MIT granted — including using, modifying and
+redistributing it. A licence already granted is not withdrawn.
 
-As ferramentas orquestradas e as bibliotecas incluídas em
-`bonder/web/static/vendor/` (**Cytoscape.js**, **marked** — ambas MIT) mantêm as
-suas próprias licenças, que **prevalecem** sobre esta quanto a elas. Ver
+### Third parties
+
+The orchestrated tools and the libraries bundled under
+`bonder/web/static/vendor/` (**Cytoscape.js**, **marked** — both MIT) keep their
+own licences, which **prevail** over this one with respect to them. See
 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
 
-## Como citar
+## How to cite
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24063135.svg)](https://doi.org/10.5281/zenodo.24063135)
 
-Ver [`CITATION.cff`](CITATION.cff) — o botão **Cite this repository**, no alto da
-página do GitHub, gera a referência pronta em APA ou BibTeX.
+See [`CITATION.cff`](CITATION.cff) — the **Cite this repository** button at the top
+of the GitHub page produces a ready-made reference in APA or BibTeX.
 
 > De-Melo, L.D.B. (2026). *Platform_Analysis_CoIP-MS-AP-MS: a local, reproducible
 > platform for CoIP-MS / AP-MS interaction partner identification in the mouse
-> proteome* (v1.0.0). Instituto Federal de Educação, Ciência e Tecnologia do Rio
-> de Janeiro (IFRJ). Zenodo. https://doi.org/10.5281/zenodo.24063135
+> proteome* (v1.0.0). Federal Institute of Education, Science and Technology of
+> Rio de Janeiro (IFRJ). Zenodo. https://doi.org/10.5281/zenodo.24063135
 
-**Qual DOI usar:**
+**Which DOI to use:**
 
-| DOI | Quando |
+| DOI | When |
 |---|---|
-| `10.5281/zenodo.24063135` | **Esta versão (1.0.0).** Use num artigo: fixa exatamente o código que você rodou, que é o que um revisor precisa poder ver. |
-| `10.5281/zenodo.24063134` | **Conceito.** Resolve sempre para a versão mais recente. Use quando quiser apontar para a plataforma em geral, não para uma versão. |
+| `10.5281/zenodo.24063135` | **This version (1.0.0).** Use it in an article: it pins exactly the code you ran, which is what a reviewer needs to be able to inspect. |
+| `10.5281/zenodo.24063134` | **Concept.** Always resolves to the most recent version. Use it to point at the platform in general, not at one version. |
 
-Cite também as **ferramentas efetivamente usadas** — as versões de cada corrida
-ficam no `manifest.json` dela, e as referências por etapa estão em
+Also cite the **tools you actually used** — the versions for each run are in its
+`manifest.json`, and the per-stage references are in
 [`docs/METODOLOGIA.md`](docs/METODOLOGIA.md).
 
-## Autor
+## Author
 
 **Luiz Dione Barbosa De-Melo** (De-Melo, L.D.B.)
-Instituto Federal de Educação, Ciência e Tecnologia do Rio de Janeiro (IFRJ),
-Rio de Janeiro, Brasil
+Federal Institute of Education, Science and Technology of Rio de Janeiro (IFRJ),
+Rio de Janeiro, Brazil
 ORCID [0000-0003-2445-9943](https://orcid.org/0000-0003-2445-9943) ·
 luiz.melo@ifrj.edu.br
+
+---
+
+*Documentation filenames are kept in Portuguese (`docs/COMO_RODAR.md`,
+`docs/METODOLOGIA.md`, `docs/REPRODUTIBILIDADE.md`) because they are referenced by
+the dashboard and are part of the archive already deposited under the DOI above.
+Their contents are in English.*

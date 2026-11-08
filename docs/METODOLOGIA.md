@@ -1,79 +1,79 @@
-# Metodologia cientifica e citacoes
+# Scientific methodology and citations
 
-Este documento descreve o metodo do `bonder` e as referencias das ferramentas
-orquestradas. Todo escore que sustenta uma conclusao vem de uma ferramenta
-**publicada e revisada por pares** — nada e reimplementado.
+This document describes the platform's method and the references for the
+orchestrated tools. Every score that supports a conclusion comes from a
+**published, peer-reviewed** tool — nothing is reimplemented.
 
-## 1. Desenho
+## 1. Design
 
-- **Amostra:** *Mus musculus* (taxid 10090), celulas in vitro.
-- **Iscas:** declaradas em `config/baits.yaml`. O pipeline trata dois casos:
-  isca **exogena** ao hospedeiro, sem ortologo murino (desenho host-pathogen), e
-  isca de outra especie **com** ortologo murino, que e mantido distinto da isca.
-  Parceiros = proteinas murinas. O repositorio traz um exemplo publico (ver
-  `config/baits.yaml`), nao dados de experimento.
-- **Controles:** IgG/mock/linhagem parental, pareados por isca.
-- **Replicas:** recomenda-se **>= 3 biologicas** por grupo. Com n=2-4, a decisao
-  prioriza especificidade (SAINT/MiST) e presenca/ausencia vs controle, com o
-  quantitativo (DEP/limma) como suporte.
+- **Sample:** *Mus musculus* (taxid 10090), cells in vitro.
+- **Baits:** declared in `config/baits.yaml`. The pipeline handles two cases: a
+  bait **exogenous** to the host, with no mouse orthologue (host–pathogen
+  design), and a bait from another species **with** a mouse orthologue, which is
+  kept distinct from the bait. Partners = mouse proteins. The repository ships a
+  public example (see `config/baits.yaml`), not experimental data.
+- **Controls:** IgG/mock/parental cell line, paired per bait.
+- **Replicates:** **≥ 3 biological** replicates per group are recommended. With
+  n = 2–4, the decision favours specificity (SAINT/MiST) and presence/absence vs
+  control, with the quantitative layer (DEP/limma) as support.
 
-## 2. Ingesta e QC
+## 2. Ingestion and QC
 
-- Parsers por motor (MaxQuant/DIA-NN/FragPipe/generico) -> matriz unica
-  (`MSDataset`), **chaveada pelo acesso UniProt lider**, com **ausente = NaN**
-  (0 do MaxQuant/FragPipe convertido para NaN em DDA; MaxLFQ do DIA-NN **nao** e
-  re-normalizado).
-- Contaminantes/decoys sinalizados por coluna booleana **e** por prefixo
-  (`CON__`/`REV__`/`contam_`); iscas nunca sao tratadas como contaminante.
-- QC: valores validos por amostra/condicao, correlacao entre replicas, log2.
+- Per-engine parsers (MaxQuant/DIA-NN/FragPipe/generic) -> a single matrix
+  (`MSDataset`), **keyed by the leading UniProt accession**, with **missing =
+  NaN** (MaxQuant/FragPipe zeros converted to NaN in DDA; DIA-NN MaxLFQ is
+  **not** re-normalised).
+- Contaminants/decoys are flagged both by boolean column **and** by prefix
+  (`CON__`/`REV__`/`contam_`); baits are never treated as contaminants.
+- QC: valid values per sample/condition, correlation between replicates, log2.
 
-## 3. Especificidade isca-presa (nucleo do CoIP)
+## 3. Bait–prey specificity (the core of CoIP)
 
 - **SAINTexpress** (Teo et al., *J Proteomics* 2014; Choi et al., *Nat Methods*
-  2011) — probabilidade SAINT + **BFDR** por prey vs controles. Padrao de fato
-  em AP-MS. Iscas exogenas sao excluidas do conjunto de preys murinos.
-- **MiST** (Verschueren et al., 2015; Jager et al., *Nature* 2011) — combina
-  reprodutibilidade, abundancia e especificidade; recomendado para a **isca
-  exogena** (paradigma host-pathogen, ex.: Gordon et al., *Nature* 2020).
+  2011) — SAINT probability + **BFDR** per prey against controls. The de facto
+  standard in AP-MS. Exogenous baits are excluded from the mouse prey set.
+- **MiST** (Verschueren et al., 2015; Jäger et al., *Nature* 2011) — combines
+  reproducibility, abundance and specificity; recommended for the **exogenous
+  bait** (host–pathogen paradigm, e.g. Gordon et al., *Nature* 2020).
 
-## 4. Quantitativo diferencial
+## 4. Differential quantification
 
-- **DEP** (Zhang et al., *Nat Protoc* 2018) — enriquecimento diferencial em
-  nivel de proteina: filtragem, normalizacao **vsn**, imputacao MNAR
-  (**MinProb**) e teste via **limma** (Ritchie et al., *NAR* 2015; teste-t
-  moderado por Bayes empirico). Ideal para matrizes de proteinGroups.
-- **MSstats** (Choi et al., *Bioinformatics* 2014) — quando ha dados em nivel de
-  feature (evidence/report), usando os conversores oficiais.
+- **DEP** (Zhang et al., *Nat Protoc* 2018) — differential enrichment at protein
+  level: filtering, **vsn** normalisation, MNAR imputation (**MinProb**) and
+  testing via **limma** (Ritchie et al., *NAR* 2015; empirical Bayes moderated
+  t-test). Well suited to proteinGroups matrices.
+- **MSstats** (Choi et al., *Bioinformatics* 2014) — when feature-level data are
+  available (evidence/report), using the official converters.
 
-## 5. Background / contaminantes
+## 5. Background / contaminants
 
-- **CRAPome** (Mellacheruvu et al., *Nat Methods* 2013) — frequencia de background;
-  aqui priorizamos a frequencia observada nos **proprios controles** do usuario.
+- **CRAPome** (Mellacheruvu et al., *Nat Methods* 2013) — background frequency;
+  here we give priority to the frequency observed in the user's **own controls**.
 
-## 6. Anotacao e rede
+## 6. Annotation and network
 
-- **UniProt** (proteoma murino), **STRING v12.0** (Szklarczyk et al.), **BioGRID**
-  (Oughtred et al.), GO via **g:Profiler** (Kolberg et al.). Rede exportada em
-  GraphML/Cytoscape (Shannon et al., *Genome Res* 2003).
+- **UniProt** (mouse proteome), **STRING v12.0** (Szklarczyk et al.), **BioGRID**
+  (Oughtred et al.), GO via **g:Profiler** (Kolberg et al.). The network is
+  exported as GraphML/Cytoscape (Shannon et al., *Genome Res* 2003).
 
-## 7. GPU (opcional)
+## 7. GPU (optional)
 
-- **DIA-NN** (Demichev et al., *Nat Methods* 2020) — busca DIA acelerada.
-- **MS2Rescore** (Declercq et al.) + **AlphaPeptDeep** (Zeng et al., *Nat
-  Commun* 2022) — rescoring por deep learning; +IDs a FDR fixo.
+- **DIA-NN** (Demichev et al., *Nat Methods* 2020) — accelerated DIA search.
+- **MS2Rescore** (Declercq et al.) + **AlphaPeptDeep** (Zeng et al., *Nat Commun*
+  2022) — deep-learning rescoring; more IDs at fixed FDR.
 - **AlphaFold2-Multimer** (Evans et al.) / **ColabFold** (Mirdita et al., *Nat
-  Methods* 2022) — validacao estrutural isca-presa dos melhores candidatos.
-- **ESM2** (Lin et al., *Science* 2023) — priorizacao **exploratoria/suplementar**;
-  nunca a base do escore de confianca.
+  Methods* 2022) — structural validation of the top bait–prey candidates.
+- **ESM2** (Lin et al., *Science* 2023) — **exploratory/supplementary**
+  prioritisation; never the basis of the confidence score.
 
-## 8. Ranqueamento final
+## 8. Final ranking
 
-Interatores ordenados por **BFDR (SAINT)**, depois **FDR (DEP/limma)**; os
-descritivos (fold change de medias, contagem de observados) entram apenas como
-QC/desempate. Rotulo de confianca: alta (BFDR <= 0.05), media (<= 0.10), baixa.
+Interactors are ordered by **BFDR (SAINT)**, then by **FDR (DEP/limma)**; the
+descriptive measures (fold change of means, observation counts) enter only as QC
+or tie-breakers. Confidence label: high (BFDR ≤ 0.05), medium (≤ 0.10), low.
 
-## 9. Reporte para publicacao
+## 9. Reporting for publication
 
-Depositar dados brutos no **ProteomeXchange/PRIDE**; reportar versoes das
-ferramentas (do `manifest.json`), parametros de busca, criterios de FDR e o
-desenho de replicas/controles. Ver `docs/REPRODUTIBILIDADE.md`.
+Deposit the raw data in **ProteomeXchange/PRIDE**; report the tool versions (from
+`manifest.json`), search parameters, FDR criteria and the replicate/control
+design. See `docs/REPRODUTIBILIDADE.md`.

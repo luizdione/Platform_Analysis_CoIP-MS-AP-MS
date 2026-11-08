@@ -1,55 +1,55 @@
-# Sequencias das iscas (FASTA)
+# Bait sequences (FASTA)
 
-Quando a isca e **exogena** ao proteoma do hospedeiro, ela precisa entrar no
-FASTA de busca (`search_db.fasta`) para ser quantificada como controle positivo.
-Coloque aqui **um FASTA por isca**, com o nome apontado em `config/baits.yaml`.
+When a bait is **exogenous** to the host proteome, it has to be included in the
+search FASTA (`search_db.fasta`) so it can be quantified as a positive control.
+Put **one FASTA per bait** here, named as pointed to by `config/baits.yaml`.
 
-Os FASTA **nao sao versionados** (ver `.gitignore`): a sequencia da sua isca e
-sua. Este diretorio sobe vazio, so com este README.
+The FASTA files are **not versioned** (see `.gitignore`): your bait sequence is
+yours. This directory is published empty, with only this README.
 
-Os comandos abaixo baixam as duas iscas do **exemplo publico** que acompanha
-`config/baits.yaml`. Troque os acessos pelos da sua Co-IP.
+The commands below download the two baits of the **public example** that ships
+with `config/baits.yaml`. Replace the accessions with those of your own Co-IP.
 
-## 1. Nucleoproteina N do SARS-CoV-2 (`NCAP_SARS2`) — UniProt P0DTC9
+## 1. SARS-CoV-2 nucleoprotein N (`NCAP_SARS2`) — UniProt P0DTC9
 
-Exemplo de isca exogena ao hospedeiro. Baixe a sequencia canonica exata (nao
-digite a mao):
+An example of a bait exogenous to the host. Download the exact canonical
+sequence (do not type it by hand):
 
 ```bash
 curl -L "https://rest.uniprot.org/uniprotkb/P0DTC9.fasta" -o NCAP_SARS2.fasta
 ```
 
-## 2. p53 humana (`TP53_HUMAN`) — UniProt P04637
+## 2. Human p53 (`TP53_HUMAN`) — UniProt P04637
 
-Exemplo de isca de outra especie que **tem** ortologo murino (`Trp53`, P02340);
-o ortologo e mantido distinto da isca pelo pipeline.
+An example of a bait from another species that **does** have a mouse orthologue
+(`Trp53`, P02340); the pipeline keeps the orthologue distinct from the bait.
 
 ```bash
 curl -L "https://rest.uniprot.org/uniprotkb/P04637.fasta" -o TP53_HUMAN.fasta
 ```
 
-## Isca sem acesso publico (construto, isolado proprio)
+## A bait with no public accession (construct, your own isolate)
 
-Se a sua isca nao tem acesso no UniProt/GenBank — um construto, uma etiqueta, ou
-o isolado do seu laboratorio — grave o FASTA a mao com um cabecalho que combine
-com o `search_db_header` declarado em `baits.yaml`:
+If your bait has no UniProt/GenBank accession — a construct, a tag, or an isolate
+from your own laboratory — write the FASTA by hand, with a header matching the
+`search_db_header` declared in `baits.yaml`:
 
 ```
->bait|MINHA_ISCA|descricao curta da isca
-MSEQ...   (a sequencia de aminoacidos)
+>bait|MY_BAIT|short description of the bait
+MSEQ...   (the amino-acid sequence)
 ```
 
-Deixe `uniprot_accession: null` nessa entrada do `baits.yaml`.
+Leave `uniprot_accession: null` in that `baits.yaml` entry.
 
-## Verificacao
+## Verification
 
-Depois de adicionar os arquivos:
+Once the files are in place:
 
 ```bash
 bonder baits check
 ```
 
-Isso valida as iscas e gera `data/search_db.fasta` (proteoma do hospedeiro +
-contaminantes + iscas) para a busca. Sem os FASTAs, o comando apenas avisa
-(nao quebra) e o restante do pipeline continua funcionando a partir de uma
-saida de busca ja pronta.
+This validates the baits and builds `data/search_db.fasta` (host proteome +
+contaminants + baits) for the search. Without the FASTA files the command only
+warns (it does not fail) and the rest of the pipeline keeps working from an
+already-prepared search output.

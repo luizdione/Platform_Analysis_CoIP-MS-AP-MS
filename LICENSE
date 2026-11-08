@@ -1,3 +1,126 @@
+===============================================================================
+  Platform_Analysis_CoIP-MS-AP-MS — LICENCE / LICENCA
+
+  This file contains the same licence in two languages.
+  Este arquivo traz a mesma licenca em dois idiomas.
+
+    Part 1 — English translation, for convenience.
+    Parte 2 — Texto em portugues.
+
+  IN CASE OF ANY DIVERGENCE BETWEEN THE TWO, THE PORTUGUESE TEXT PREVAILS.
+  EM CASO DE DIVERGENCIA ENTRE AS DUAS, PREVALECE O TEXTO EM PORTUGUES.
+
+  The Portuguese version is the one adopted by the Author: it refers to Brazilian
+  Law no. 9.609/98 and no. 9.610/98 and elects the courts of Rio de Janeiro, and
+  it is the text published with version 1.0.0. The English version is a courtesy
+  translation and creates no rights beyond those granted by the Portuguese text.
+===============================================================================
+
+
+===============================================================================
+  PART 1 — ENGLISH (courtesy translation; the Portuguese text below prevails)
+===============================================================================
+
+LICENSE — Platform_Analysis_CoIP-MS-AP-MS
+Version 1.0, November 2026
+
+Copyright (c) 2026 Luiz Dione Barbosa De-Melo (De-Melo, L.D.B.)
+Federal Institute of Education, Science and Technology of Rio de Janeiro (IFRJ), Brazil
+ORCID 0000-0003-2445-9943 · luiz.melo@ifrj.edu.br
+https://github.com/luizdione/Platform_Analysis_CoIP-MS-AP-MS
+
+SUMMARY (does not replace the terms below)
+  • Personal use and use in teaching: free, no permission needed.
+  • Use in research: allowed only with the author's PRIOR WRITTEN AUTHORIZATION, by e-mail.
+  • Commercial use: not allowed.
+  • Redistribution, modification and derivative works: not allowed.
+
+1. DEFINITIONS
+1.1. "Program" means Platform_Analysis_CoIP-MS-AP-MS: the source code in this repository, the packages and container
+     images published by the Author, the documentation and the configuration files that
+     accompany them.
+1.2. "Author" means Luiz Dione Barbosa De-Melo, who holds the rights to the Program.
+1.3. "Personal use" means use by a natural person, on their own equipment, with no economic
+     purpose and without providing a service to third parties.
+1.4. "Use in teaching" means use in teaching and learning activities — classes, courses,
+     training, workshops and demonstrations — by educational institutions and by their students
+     and faculty, including use by a student in coursework.
+1.5. "Use in research" means use that generates, processes or analyses data intended for
+     scientific investigation, including in a dissertation, thesis, research report, funding
+     application, preprint, article, abstract, poster, conference presentation or patent.
+1.6. "Commercial use" means use aimed, directly or indirectly, at economic gain, such as paid
+     services, consulting, analysis performed for a client, sale, rental, sublicensing, offering
+     as a service (SaaS), and use in business activity.
+
+2. FREE USES
+2.1. The Author grants a non-exclusive, royalty-free, worldwide, non-transferable and revocable
+     licence to download, install, run and read the Program for Personal use and for Use in
+     teaching, provided the authorship notices and this licence are kept.
+2.2. These uses require no prior notice to the Author.
+
+3. USE IN RESEARCH — REQUIRES PRIOR AUTHORIZATION
+3.1. Use in research is permitted only after PRIOR, EXPRESS AUTHORIZATION from the Author,
+     requested by e-mail to luiz.melo@ifrj.edu.br.
+3.2. The request must state who will use the Program, the institution, the purpose of the
+     research and the intended destination of the results.
+3.3. The authorization is personal, limited to the project described in the request, and does
+     not extend to other projects, groups or institutions. The Author may grant, deny or
+     condition it, including on forms of authorship credit, and may revoke it for breach of this
+     licence.
+3.4. Running the Program only to learn about or evaluate it, without generating research data or
+     results, is Personal use and requires no authorization.
+
+4. COMMERCIAL USE
+4.1. Commercial use is not permitted under this licence, under any circumstances.
+4.2. Those interested should contact the Author to negotiate a specific licence.
+
+5. GENERAL LIMITS
+5.1. Without the Author's written authorization, it is prohibited to: distribute copies of the
+     Program, in whole or in part; publish it in another repository, registry or application
+     store; modify, adapt, translate or create derivative works; reverse engineer it, except as
+     the law expressly allows; or remove or alter notices of authorship, licence or provenance.
+5.2. Installing, configuring and running the Program in one's own environment, as documented, is
+     not modification.
+5.3. This licence transfers neither ownership of the Program nor any trademark rights.
+
+6. CITATION
+6.1. Any work resulting from authorized Use in research must cite the Program as set out in the
+     CITATION.cff file in this repository, with its name, version and URL.
+
+7. USER DATA AND RESULTS
+7.1. The Program runs in the user's environment. Input data and the results produced belong to
+     whoever generated them; the Author neither collects nor accesses them.
+
+8. THIRD-PARTY COMPONENTS
+8.1. The Program depends on, and may include, third-party components, each under its own
+     licence, which prevails over this one as to those components. Attributions are in
+     THIRD_PARTY_NOTICES.md, where present, and in the files themselves.
+
+9. WARRANTIES AND LIABILITY
+9.1. THE PROGRAM IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+     INCLUDING WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, OF ACCURACY OF RESULTS AND OF
+     NON-INFRINGEMENT.
+9.2. The Program is a research support tool. Interpreting the results, and any decision taken
+     from them, are the user's responsibility.
+9.3. TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE AUTHOR IS NOT LIABLE FOR DIRECT, INDIRECT OR
+     INCIDENTAL DAMAGES, OR FOR LOST PROFITS, ARISING FROM THE USE OR THE INABILITY TO USE THE
+     PROGRAM.
+
+10. TERM
+10.1. This licence is in force for as long as the user complies with it. Breach terminates it
+      automatically, and the user must then stop using the Program and delete any copies held.
+
+11. GOVERNING LAW
+11.1. The Program is protected by Brazilian Law no. 9.609/98 and Law no. 9.610/98. Brazilian law
+      applies, and the courts of the Judicial District of Rio de Janeiro, RJ, Brazil, have
+      jurisdiction.
+
+For authorizations and for commercial use, contact: luiz.melo@ifrj.edu.br
+
+===============================================================================
+  PARTE 2 — PORTUGUES (texto que prevalece)
+===============================================================================
+
 LICENÇA DE USO — Platform_Analysis_CoIP-MS-AP-MS
 Versão 1.0, novembro de 2026
 
@@ -101,22 +224,25 @@ SUMMARY IN ENGLISH (the Portuguese text below prevails)
 Contato para autorizações e para uso comercial: luiz.melo@ifrj.edu.br
 
 ===============================================================================
-NOTA HISTÓRICA SOBRE A LICENÇA ANTERIOR (MIT)
+NOTE ON THE PREVIOUS LICENCE (MIT)
 
-Até novembro de 2026 este programa foi publicado sob a licença MIT. A licença
-acima passa a valer a partir desta versão e vale para as versões futuras.
+Until November 2026 this program was released under the MIT licence. The licence
+above applies from version 1.0.0 onwards and to later versions.
 
-Isso NÃO revoga a MIT para o que já havia sido publicado: quem obteve uma cópia
+This does NOT revoke the MIT grant for what had already been published: anyone
+who obtained a copy while it was under MIT keeps the rights MIT granted them over
+THAT copy, including using, modifying and redistributing it. A licence already
+granted is not withdrawn. What the change reaches is this version and the ones
+that follow.
+
+NOTA HISTORICA SOBRE A LICENCA ANTERIOR (MIT)
+
+Ate novembro de 2026 este programa foi publicado sob a licenca MIT. A licenca
+acima passa a valer a partir da versao 1.0.0 e vale para as versoes futuras.
+
+Isso NAO revoga a MIT para o que ja havia sido publicado: quem obteve uma copia
 do programa enquanto ela estava sob MIT continua com os direitos que a MIT lhe
-concedeu sobre AQUELA cópia, inclusive usá-la, modificá-la e redistribuí-la.
-Uma licença já concedida não se retira. O que a mudança alcança é esta versão e
+concedeu sobre AQUELA copia, inclusive usa-la, modifica-la e redistribui-la.
+Uma licenca ja concedida nao se retira. O que a mudanca alcanca e esta versao e
 as seguintes.
-
-HISTORICAL NOTE ON THE PREVIOUS LICENSE (MIT)
-
-Until November 2026 this program was released under the MIT license. The license
-above applies from this version onwards. This does NOT revoke the MIT grant for
-what had already been published: anyone who obtained a copy while it was under
-MIT keeps the rights MIT granted them over THAT copy. A license already granted
-is not withdrawn; the change applies to this and later versions.
 ===============================================================================

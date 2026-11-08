@@ -1,136 +1,157 @@
 # Changelog
 
-Mudanças relevantes da plataforma **Platform_Analysis_CoIP-MS-AP-MS**. Formato
-baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/);
-versionamento [SemVer](https://semver.org/lang/pt-BR/).
+Notable changes to **Platform_Analysis_CoIP-MS-AP-MS**. Format based on
+[Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning follows
+[SemVer](https://semver.org/).
+
+## [Unreleased]
+
+### Changed
+
+- Public-facing documentation is now in **English**, following the author's
+  policy for public repositories: README, the three documents under `docs/`, the
+  guidance comments in `config/baits.yaml` and `config/samples.yaml`,
+  `config/sequences/README.md`, this changelog and the help-tab labels in the
+  dashboard.
+- `LICENSE` is now **bilingual**: an English translation followed by the
+  Portuguese text, with an explicit clause stating that **the Portuguese text
+  prevails** in case of divergence — it is the version the author adopted, it
+  refers to Brazilian Law no. 9.609/98 and no. 9.610/98 and elects the courts of
+  Rio de Janeiro, and it is the text published with version 1.0.0.
+- Documentation **filenames stay in Portuguese** (`docs/COMO_RODAR.md`,
+  `docs/METODOLOGIA.md`, `docs/REPRODUTIBILIDADE.md`): they are referenced by the
+  dashboard and are part of the archive already deposited under
+  [10.5281/zenodo.24063135](https://doi.org/10.5281/zenodo.24063135). Only their
+  contents changed.
+- Code comments and commit messages remain in Portuguese, unchanged.
 
 ## [1.0.0] - 2026-11-06
 
 **DOI:** [10.5281/zenodo.24063135](https://doi.org/10.5281/zenodo.24063135)
-(conceito: [10.5281/zenodo.24063134](https://doi.org/10.5281/zenodo.24063134))
+(concept: [10.5281/zenodo.24063134](https://doi.org/10.5281/zenodo.24063134))
 
-Primeira versão publicada como **plataforma científica aberta**. O repositório
-passa a conter apenas a plataforma: nenhum dado de experimento, nenhum alvo real
-e nenhuma anotação de trabalho.
+First release published as an **open scientific platform**. The repository now
+contains only the platform: no experimental data, no real targets and no working
+notes.
 
-### Alterado — LICENÇA (leia antes de atualizar)
+> The archive deposited under the DOI above is the Portuguese-language snapshot
+> of 1.0.0, which is what was published at the time.
 
-- A licença mudou de **MIT** para a **licença de uso própria** em `LICENSE`:
-  uso pessoal e de ensino livres, **uso em pesquisa somente com autorização
-  prévia do autor por e-mail** (luiz.melo@ifrj.edu.br), uso comercial proibido,
-  redistribuição e obras derivadas proibidas.
-- **A mudança vale desta versão em diante.** Ela **não revoga a MIT** para o que
-  já havia sido publicado: quem obteve uma cópia enquanto o programa estava sob
-  MIT mantém, sobre **aquela cópia**, todos os direitos que a MIT lhe concedeu —
-  inclusive usar, modificar e redistribuir. Uma licença já concedida não se
-  retira. Versões anteriores a esta continuam MIT para quem as recebeu.
-- Adicionado `THIRD_PARTY_NOTICES.md`: as duas bibliotecas JavaScript incluídas
-  em `bonder/web/static/vendor/` (**Cytoscape.js** 3.30.2 e **marked** 15.0.12,
-  ambas MIT) e as ferramentas de proteômica orquestradas, cada uma com a sua
-  própria licença — que prevalece sobre a desta plataforma quanto a ela.
-- Adicionado `CITATION.cff` (De-Melo, L.D.B.; ORCID 0000-0003-2445-9943; IFRJ).
+### Changed — LICENCE (read before updating)
 
-### Alterado — configuração passa a ser exemplo público
+- The licence changed from **MIT** to the author's **own licence** in `LICENSE`:
+  personal use and use in teaching are free, **use in research requires the
+  author's prior authorisation by e-mail** (luiz.melo@ifrj.edu.br), commercial
+  use is not allowed, and neither are redistribution or derivative works.
+- **The change applies from this version onwards.** It **does not revoke the MIT
+  grant** for what had already been published: anyone who obtained a copy while
+  the program was under MIT keeps, over **that copy**, every right MIT granted —
+  including using, modifying and redistributing it. A licence already granted is
+  not withdrawn. Versions before this one remain MIT for whoever received them.
+- Added `THIRD_PARTY_NOTICES.md`: the two JavaScript libraries bundled under
+  `bonder/web/static/vendor/` (**Cytoscape.js** 3.30.2 and **marked** 15.0.12,
+  both MIT) and the orchestrated proteomics tools, each under its own licence —
+  which prevails over this platform's licence with respect to it.
+- Added `CITATION.cff` (De-Melo, L.D.B.; ORCID 0000-0003-2445-9943; IFRJ).
 
-- `config/baits.yaml` e `config/samples.yaml` agora trazem um **exemplo público e
-  mínimo**, montado só com sequências de referência do UniProt, para servir de
-  modelo ao usuário preencher. O exemplo cobre os dois casos que o pipeline trata
-  de forma diferente: isca **exógena** ao hospedeiro sem ortólogo murino
-  (host–patógeno, nucleoproteína N do SARS-CoV-2, P0DTC9) e isca de outra espécie
-  **com** ortólogo murino mantido distinto (p53 humana, P04637, ortólogo `Trp53`
-  P02340). Os cabeçalhos dos arquivos dizem explicitamente que são exemplo.
-- `config/sequences/README.md` reescrito: como baixar os FASTA do exemplo e como
-  declarar uma isca sem acesso público (construto, etiqueta, isolado próprio).
-  Os FASTA continuam fora do versionamento.
-- `config/gpu.yaml` deixou de assumir um modelo de placa específico; a
-  `min_capability` e o teto de resíduos são parâmetros do usuário.
+### Changed — configuration is now a public example
 
-### Alterado — portabilidade
+- `config/baits.yaml` and `config/samples.yaml` now ship a **minimal public
+  example** built only from UniProt reference sequences, as a template for users
+  to fill in. The example covers the two cases the pipeline treats differently: a
+  bait **exogenous** to the host with no mouse orthologue (host–pathogen,
+  SARS-CoV-2 nucleoprotein N, P0DTC9) and a bait from another species **with** a
+  mouse orthologue kept distinct (human p53, P04637, orthologue `Trp53` P02340).
+  The file headers state explicitly that these are examples.
+- `config/sequences/README.md` rewritten: how to download the example FASTA files
+  and how to declare a bait with no public accession (construct, tag, own
+  isolate). The FASTA files remain outside version control.
+- `config/gpu.yaml` no longer assumes a specific graphics card; `min_capability`
+  and the residue ceiling are user parameters.
 
-- `iniciar_bonder.ps1` não traz mais caminho de máquina nenhum: usa
-  `$env:BONDER_PYTHON` quando definida e, na falta, o `python` do PATH, **com
-  mensagem de erro explícita** dizendo o que definir quando nenhum dos dois
-  existe.
-- O ambiente conda documentado passou a ser o do próprio projeto (`bonder`, em
-  `environment.yml`), em vez de um ambiente pessoal: `conda env create -f
+### Changed — portability
+
+- `iniciar_bonder.ps1` no longer contains any machine-specific path: it uses
+  `$env:BONDER_PYTHON` when set and otherwise the `python` on PATH, **with an
+  explicit error message** saying what to set when neither exists.
+- The documented conda environment is now the project's own (`bonder`, in
+  `environment.yml`) instead of a personal one: `conda env create -f
   environment.yml`.
-- Documentação e scripts deixaram de citar um modelo de GPU específico; a GPU é
-  descrita por capacidade (NVIDIA CUDA, fallback CPU garantido).
-- `.dockerignore` endurecido: a imagem de contêiner não carrega dados de entrada,
-  bancos baixados, saídas de corrida, FASTA de iscas, credenciais nem anotação de
-  trabalho.
+- Documentation and scripts no longer name a specific GPU model; the GPU is
+  described by capability (NVIDIA CUDA, with a guaranteed CPU fallback).
+- `.dockerignore` hardened: the container image carries no input data, downloaded
+  databases, run outputs, bait FASTA files, credentials or working notes.
 
-### Removido
+### Removed
 
-- Toda a anotação de trabalho interna do autor (memória de projeto, instruções de
-  sessão, decisões, tarefas e sessões arquivadas) e os alvos e amostras reais dos
-  experimentos dele. **Este repositório não contém dados de pesquisa.**
-- O histórico anterior do repositório foi arquivado em repositório privado; esta
-  versão inicia um histórico novo, para que o conteúdo removido não continue
-  acessível via commits antigos.
+- All of the author's internal working notes (project memory, session
+  instructions, decisions, tasks and archived sessions) and the real targets and
+  samples from their experiments. **This repository contains no research data.**
+- The repository's previous history was archived in a private repository; this
+  release starts a new history, so that the removed content is no longer
+  reachable through old commits.
 
-### Adicionado
+### Added
 
-- Imagem de contêiner pública no **GHCR**, vinculada a este repositório, para
-  rodar a plataforma sem build local (ver o README).
+- A public container image on **GHCR**, linked to this repository, to run the
+  platform without a local build (see the README).
 
 ---
 
-## Histórico anterior (resumo técnico)
+## Earlier history (technical summary)
 
-As versões abaixo circularam sob licença MIT. O resumo é mantido para dar
-contexto ao código; a descrição dos sistemas biológicos que o autor estudava foi
-retirada, por não fazer parte da plataforma.
+The versions below circulated under the MIT licence. The summary is kept to give
+context to the code; the description of the biological systems the author was
+studying has been removed, as it is not part of the platform.
 
 ### [0.3.0] - 2026-07
 
-- Exportador de resultados como **página HTML estática**, para publicar o
-  relatório de uma corrida em qualquer hospedagem (as análises continuam rodando
-  em localhost).
-- Base de contaminantes **cRAP** a partir da fonte pública, com checksum.
-- Dashboard: seletor de arquivos de entrada, rede **STRING/BioGRID** e assets
-  servidos localmente (funciona offline).
-- Aba **Ajuda e Tutoriais**: serve os documentos `.md` (tutoriais, metodologia,
-  reprodutibilidade) e a licença, renderizados no navegador. Endpoints
-  `GET /api/docs` e `GET /api/docs/<id>`.
+- Exporter that renders a run's results as a **static HTML page**, publishable on
+  any web host (the analyses keep running on localhost).
+- **cRAP** contaminant database built from the public source, with a checksum.
+- Dashboard: input-file selector, **STRING/BioGRID** network and locally served
+  assets (works offline).
+- **Help and Tutorials** tab: serves the `.md` documents (tutorials, methodology,
+  reproducibility) and the licence, rendered in the browser. Endpoints
+  `GET /api/docs` and `GET /api/docs/<id>`.
 
 ### [0.2.0] - 2026-07
 
-- Digestão in silico do proteoma murino e metodologia subtrativa.
+- In-silico digestion of the mouse proteome and the subtractive methodology.
 
 ### [0.1.0] - 2026-07-02
 
-Primeira versão da plataforma CoIP-MS / AP-MS.
+First release of the CoIP-MS / AP-MS platform.
 
-- **Ingesta (`bonder.io`)**: parsers MaxQuant/DIA-NN/FragPipe/genérico para um
-  `MSDataset` unificado; detecção automática de motor e de aquisição (DDA/DIA);
-  ausente = NaN (nunca 0); chave por acesso UniProt líder; iscas exógenas
-  marcadas e mantidas distintas do ortólogo do hospedeiro.
-- **Especificidade (`bonder.scoring`)**: formatação de entrada + wrappers de
-  **SAINTexpress** (todas as iscas) e **MiST** (iscas exógenas, host–patógeno).
-- **Quantitativo (`bonder.stats`)**: wrappers R para **DEP/limma/MSstats**
-  (Bioconductor) via Rscript; QC em Python (sem valor inferencial). MaxLFQ do
-  DIA-NN nunca é re-normalizado.
-- **Bancos (`bonder.db`)**: UniProt/STRING/BioGRID/cRAP murinos com cache
-  reprodutível (checksum, modo offline) + montagem do `search_db.fasta`.
-- **GPU (`bonder.gpu`)**: DIA-NN / MS2Rescore / AlphaPeptDeep / AlphaFold e ESM2
-  (suplementar), com fallback CPU e `gpu_gate` cooperativo.
-- **Pipeline + Web**: orquestrador, relatório (tabela/volcano/rede), dashboard
-  Flask + fila RQ/Redis (fallback thread).
-- **Docker**: imagem de análise (Python + R + SAINT) e imagem GPU (CUDA 12.4 +
-  torch); `docker compose` CPU por padrão + overlay de GPU.
-- **Aba Manutenção**: auditoria (deps, ferramentas, R, GPU, config, bancos,
-  caminhos, corridas) + autoteste do pipeline em dados sintéticos.
-- Documentação PT-BR (metodologia com citações, como rodar, reprodutibilidade) e
-  testes do núcleo (CPU, sem GPU/R).
+- **Ingestion (`bonder.io`)**: MaxQuant/DIA-NN/FragPipe/generic parsers into a
+  unified `MSDataset`; automatic detection of engine and acquisition (DDA/DIA);
+  missing = NaN (never 0); keyed by the leading UniProt accession; exogenous
+  baits flagged and kept distinct from the host orthologue.
+- **Specificity (`bonder.scoring`)**: input formatting plus wrappers for
+  **SAINTexpress** (all baits) and **MiST** (exogenous baits, host–pathogen).
+- **Quantification (`bonder.stats`)**: R wrappers for **DEP/limma/MSstats**
+  (Bioconductor) via Rscript; QC in Python (no inferential value). DIA-NN MaxLFQ
+  is never re-normalised.
+- **Databases (`bonder.db`)**: mouse UniProt/STRING/BioGRID/cRAP with a
+  reproducible cache (checksum, offline mode) + assembly of `search_db.fasta`.
+- **GPU (`bonder.gpu`)**: DIA-NN / MS2Rescore / AlphaPeptDeep / AlphaFold and ESM2
+  (supplementary), with a CPU fallback and a cooperative `gpu_gate`.
+- **Pipeline + web**: orchestrator, report (table/volcano/network), Flask
+  dashboard + RQ/Redis queue (thread fallback).
+- **Docker**: analysis image (Python + R + SAINT) and GPU image (CUDA 12.4 +
+  torch); `docker compose` on CPU by default plus a GPU overlay.
+- **Maintenance tab**: audit (dependencies, tools, R, GPU, config, databases,
+  paths, runs) plus a pipeline self-test on synthetic data.
+- Documentation and core tests (CPU, no GPU/R).
 
-#### Corrigido ao longo da série 0.x
+#### Fixed across the 0.x series
 
-- `saint` não existe como pacote conda: removido do env; SAINTexpress passou a
-  ser compilado do código-fonte no Dockerfile, best-effort e não-fatal.
-- Mapeamento de peptídeos/q-value do DIA-NN pela `Protein.Group` original.
-- Fallback de gene no SAINT gravava o literal `nan` (NaN é truthy) → cai para o
-  acesso.
-- Dashboard: coluna log2fc vazia sem R → usa `log2fc_descriptive`; o polling
-  agora para em status terminal (done/error).
-- CI: dependência `requests` faltando no job de testes.
+- `saint` does not exist as a conda package: removed from the environment;
+  SAINTexpress is now compiled from source in the Dockerfile, best-effort and
+  non-fatal.
+- DIA-NN peptide/q-value mapping now uses the original `Protein.Group`.
+- The SAINT gene fallback wrote the literal `nan` (NaN is truthy) → it now falls
+  back to the accession.
+- Dashboard: an empty log2fc column without R → uses `log2fc_descriptive`; the
+  polling now stops at a terminal status (done/error).
+- CI: the `requests` dependency was missing from the test job.

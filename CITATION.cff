@@ -10,7 +10,7 @@ abstract: >-
   com dashboard servido em localhost. Nao contem dados de experimento.
 type: software
 version: "1.0.0"
-date-released: "2026-11-05"
+date-released: "2026-11-06"
 authors:
   - family-names: "De-Melo"
     given-names: "Luiz Dione Barbosa"

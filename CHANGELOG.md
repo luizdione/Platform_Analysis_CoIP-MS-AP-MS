@@ -4,7 +4,7 @@ Mudanças relevantes da plataforma **Platform_Analysis_CoIP-MS-AP-MS**. Formato
 baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/);
 versionamento [SemVer](https://semver.org/lang/pt-BR/).
 
-## [1.0.0] - 2026-11-05
+## [1.0.0] - 2026-11-06
 
 Primeira versão publicada como **plataforma científica aberta**. O repositório
 passa a conter apenas a plataforma: nenhum dado de experimento, nenhum alvo real

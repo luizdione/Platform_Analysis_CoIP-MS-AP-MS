@@ -9,12 +9,13 @@ abstract: >-
   FragPipe, DIA-NN) inside reproducible containers, with a dashboard served on
   localhost. It contains no experimental data.
 type: software
-version: "1.0.1"
-date-released: "2026-11-08"
+version: "1.0.2"
+date-released: "2026-11-09"
 # The concept DOI is used as the citation DOI because it always resolves to the
 # most recent deposited version. The version DOI 10.5281/zenodo.24063135 pins
-# release 1.0.0, which is the archive currently deposited; version 1.0.1 changed
-# only the language of the public documentation and was not deposited separately.
+# release 1.0.0, which is the archive currently deposited; releases 1.0.1 and
+# 1.0.2 changed only the language of the public documentation and were not
+# deposited separately.
 doi: "10.5281/zenodo.24063134"
 identifiers:
   - type: doi

@@ -22,5 +22,5 @@ O nucleo cientifico (io/scoring-formatacao/annotate) e testavel em CPU, sem GPU
 nem R, para rodar em CI e em qualquer maquina.
 """
 
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 __all__ = ["__version__"]

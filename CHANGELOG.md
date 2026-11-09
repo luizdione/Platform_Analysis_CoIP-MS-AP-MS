@@ -4,6 +4,49 @@ Notable changes to **Platform_Analysis_CoIP-MS-AP-MS**. Format based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning follows
 [SemVer](https://semver.org/).
 
+## [1.0.2] - 2026-11-09
+
+Documentation only, again: no change to the code, the pipeline or the results.
+
+### Changed
+
+- The remaining public files are now in **English** too: `THIRD_PARTY_NOTICES.md`
+  (which was entirely in Portuguese, not just one section) and the guidance
+  comments in `config/databases.yaml` and `config/gpu.yaml`.
+- The **internal development files** follow the same policy, by the author's
+  decision: `.gitignore`, `.dockerignore`, `.gitattributes`, `Makefile`, both
+  workflows, `requirements.txt`, `requirements-gpu.txt`, `environment.yml`,
+  `docker/environment-analysis.yml`, both Dockerfiles and both compose files.
+  This includes the output a user actually sees: the `make` help, the CI data
+  guard's error messages, and the warning the build prints when SAINTexpress
+  does not compile.
+- Only comments, messages and labels changed. Nothing in the logic: the 28
+  ignore rules are byte-for-byte identical, the dependency specifications are
+  unchanged, and the compose and environment files parse to the same structures.
+
+### Fixed
+
+- Two docstrings pointed at files that do not exist. `bonder/stats/runner.py`
+  claimed the R scripts live in `bonder/R/` and run in a `Dockerfile.r`
+  container; they live in `R/` at the repository root (which is what the code
+  itself resolves) and run in `docker/Dockerfile.analysis`.
+  `bonder/scoring/saint.py` referred to a "scoring container" and
+  `bonder/docker/Dockerfile.scoring`; SAINTexpress is compiled in
+  `docker/Dockerfile.analysis`. Comments only — no behaviour changed.
+
+### Note on the container image
+
+Release 1.0.1 shipped the image before the documentation above was translated,
+so `:1.0.1` carries the Portuguese `THIRD_PARTY_NOTICES.md`. That tag is left as
+it is, because it correctly pins what 1.0.1 was. From this release on,
+`:latest`, `:1.0` and `:1.0.2` carry the English documentation.
+
+### Not deposited separately
+
+As with 1.0.1, this release was not deposited in Zenodo: it changes only the
+language of the public documentation. `CITATION.cff` cites the **concept DOI**
+([10.5281/zenodo.24063134](https://doi.org/10.5281/zenodo.24063134)).
+
 ## [1.0.1] - 2026-11-08
 
 Documentation only: no change to the code, the pipeline or the results.

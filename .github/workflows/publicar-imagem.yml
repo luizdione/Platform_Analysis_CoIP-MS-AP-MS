@@ -12,6 +12,10 @@ on:
     types: [published]
   workflow_dispatch:
     inputs:
+      ref:
+        description: "Git ref a construir (ex.: v1.0.1). Vazio = branch padrao."
+        required: false
+        default: ""
       tag:
         description: "Tag da imagem (ex.: 1.0.1). Vazio = 'latest' apenas."
         required: false
@@ -27,7 +31,28 @@ jobs:
       contents: read
       packages: write
     steps:
+      # No disparo manual, 'ref' vazio pega o BRANCH PADRAO - e nao a tag da
+      # versao. Marcar uma imagem com um numero de versao a partir do branch faz
+      # a tag deixar de corresponder ao que foi lancado. Por isso: para publicar
+      # uma versao, informe a tag git em 'ref' (ex.: v1.0.1), ou publique pela
+      # release, que ja constroi do proprio ponto da tag.
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.ref || github.ref }}
+
+      - name: Recusar marcar versao a partir de ref movel
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.tag != ''
+        run: |
+          set -eu
+          ref='${{ github.event.inputs.ref }}'
+          case "$ref" in
+            v*|refs/tags/*) echo "ok: construindo da tag '$ref'" ;;
+            *)
+              echo "ERRO: pedir a tag de imagem '${{ github.event.inputs.tag }}' sem informar"
+              echo "uma tag git em 'ref' marcaria uma versao com o conteudo do branch."
+              echo "Informe ref=v<versao>, ou publique pela release."
+              exit 1 ;;
+          esac
 
       - name: Nome da imagem em minusculas
         id: nome

@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bonder"
-version = "1.0.0"
-description = "Plataforma CoIP-MS / AP-MS para identificacao de parceiros de interacao no proteoma murino (orquestra SAINTexpress/MiST/DEP/limma/MSstats)."
+version = "1.0.1"
+description = "CoIP-MS / AP-MS platform for identifying protein-protein interaction partners in the mouse proteome (orchestrates SAINTexpress/MiST/DEP/limma/MSstats)."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { file = "LICENSE" }

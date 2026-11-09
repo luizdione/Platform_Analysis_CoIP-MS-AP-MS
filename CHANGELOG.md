@@ -4,7 +4,9 @@ Notable changes to **Platform_Analysis_CoIP-MS-AP-MS**. Format based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning follows
 [SemVer](https://semver.org/).
 
-## [Unreleased]
+## [1.0.1] - 2026-11-08
+
+Documentation only: no change to the code, the pipeline or the results.
 
 ### Changed
 
@@ -24,6 +26,24 @@ Notable changes to **Platform_Analysis_CoIP-MS-AP-MS**. Format based on
   [10.5281/zenodo.24063135](https://doi.org/10.5281/zenodo.24063135). Only their
   contents changed.
 - Code comments and commit messages remain in Portuguese, unchanged.
+
+### Note on the container image tags
+
+The image tag `1.0.0` was briefly overwritten with content newer than release
+1.0.0, because a manual workflow run builds from the default branch rather than
+from the release tag. It has been restored to the digest built from `v1.0.0`, so
+that `ghcr.io/luizdione/platform_analysis_coip-ms-ap-ms:1.0.0` matches the
+`v1.0.0` git tag and the archive deposited under
+[10.5281/zenodo.24063135](https://doi.org/10.5281/zenodo.24063135). The publish
+workflow now refuses to tag a version from a moving ref.
+
+### Not deposited separately
+
+This release was not deposited in Zenodo: it changes only the language of the
+public documentation, and the archive under the version DOI above remains the
+faithful snapshot of 1.0.0 as published. `CITATION.cff` therefore cites the
+**concept DOI** ([10.5281/zenodo.24063134](https://doi.org/10.5281/zenodo.24063134)),
+which always resolves to the most recent deposited version.
 
 ## [1.0.0] - 2026-11-06
 

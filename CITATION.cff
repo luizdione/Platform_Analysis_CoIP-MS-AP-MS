@@ -1,34 +1,36 @@
 cff-version: 1.2.0
-message: "Se usar este programa, cite-o conforme os campos abaixo."
+message: "If you use this software, please cite it using the fields below."
 title: "Platform_Analysis_CoIP-MS-AP-MS"
 abstract: >-
-  Plataforma local (navegador + Docker) para analise de CoIP-MS / AP-MS e
-  identificacao de parceiros de interacao proteina-proteina no proteoma de
-  camundongo (Mus musculus, taxid 10090). Orquestra ferramentas publicadas e
-  revisadas por pares da comunidade de proteomica (SAINTexpress, MiST,
-  DEP/limma/MSstats, MaxQuant, FragPipe, DIA-NN) em conteineres reprodutiveis,
-  com dashboard servido em localhost. Nao contem dados de experimento.
+  A local platform (browser + Docker) for CoIP-MS / AP-MS analysis and
+  identification of protein-protein interaction partners in the mouse proteome
+  (Mus musculus, taxid 10090). It orchestrates published, peer-reviewed tools
+  from the proteomics community (SAINTexpress, MiST, DEP/limma/MSstats, MaxQuant,
+  FragPipe, DIA-NN) inside reproducible containers, with a dashboard served on
+  localhost. It contains no experimental data.
 type: software
-version: "1.0.0"
-date-released: "2026-11-06"
-# DOI desta versao (fixa o conteudo da 1.0.0). O DOI de conceito,
-# 10.5281/zenodo.24063134, resolve sempre para a versao mais recente.
-doi: "10.5281/zenodo.24063135"
+version: "1.0.1"
+date-released: "2026-11-08"
+# The concept DOI is used as the citation DOI because it always resolves to the
+# most recent deposited version. The version DOI 10.5281/zenodo.24063135 pins
+# release 1.0.0, which is the archive currently deposited; version 1.0.1 changed
+# only the language of the public documentation and was not deposited separately.
+doi: "10.5281/zenodo.24063134"
 identifiers:
   - type: doi
-    value: "10.5281/zenodo.24063135"
-    description: "DOI desta versao (1.0.0)"
-  - type: doi
     value: "10.5281/zenodo.24063134"
-    description: "DOI de conceito: resolve sempre para a versao mais recente"
+    description: "Concept DOI: always resolves to the most recent deposited version"
+  - type: doi
+    value: "10.5281/zenodo.24063135"
+    description: "Version DOI: pins release 1.0.0 (documentation in Portuguese)"
 authors:
   - family-names: "De-Melo"
     given-names: "Luiz Dione Barbosa"
     orcid: "https://orcid.org/0000-0003-2445-9943"
     email: "luiz.melo@ifrj.edu.br"
     affiliation: >-
-      Instituto Federal de Educacao, Ciencia e Tecnologia do Rio de Janeiro
-      (IFRJ), Rio de Janeiro, Brasil
+      Federal Institute of Education, Science and Technology of Rio de Janeiro
+      (IFRJ), Rio de Janeiro, Brazil
 repository-code: "https://github.com/luizdione/Platform_Analysis_CoIP-MS-AP-MS"
 url: "https://github.com/luizdione/Platform_Analysis_CoIP-MS-AP-MS"
 license-url: "https://github.com/luizdione/Platform_Analysis_CoIP-MS-AP-MS/blob/main/LICENSE"

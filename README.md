@@ -245,22 +245,27 @@ own licences, which **prevail** over this one with respect to them. See
 
 ## How to cite
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24063135.svg)](https://doi.org/10.5281/zenodo.24063135)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24063134.svg)](https://doi.org/10.5281/zenodo.24063134)
 
 See [`CITATION.cff`](CITATION.cff) — the **Cite this repository** button at the top
 of the GitHub page produces a ready-made reference in APA or BibTeX.
 
 > De-Melo, L.D.B. (2026). *Platform_Analysis_CoIP-MS-AP-MS: a local, reproducible
 > platform for CoIP-MS / AP-MS interaction partner identification in the mouse
-> proteome* (v1.0.0). Federal Institute of Education, Science and Technology of
-> Rio de Janeiro (IFRJ). Zenodo. https://doi.org/10.5281/zenodo.24063135
+> proteome*. Federal Institute of Education, Science and Technology of Rio de
+> Janeiro (IFRJ). Zenodo. https://doi.org/10.5281/zenodo.24063134
 
 **Which DOI to use:**
 
 | DOI | When |
 |---|---|
-| `10.5281/zenodo.24063135` | **This version (1.0.0).** Use it in an article: it pins exactly the code you ran, which is what a reviewer needs to be able to inspect. |
-| `10.5281/zenodo.24063134` | **Concept.** Always resolves to the most recent version. Use it to point at the platform in general, not at one version. |
+| `10.5281/zenodo.24063134` | **Concept.** Always resolves to the most recent deposited version. The default choice, and the one in `CITATION.cff`. |
+| `10.5281/zenodo.24063135` | **Version 1.0.0.** Use it in an article when you need to pin exactly the code you ran, which is what a reviewer needs to be able to inspect. |
+
+Release 1.0.1 was not deposited separately: it changed only the language of the
+public documentation, so the archive under the version DOI stays the faithful
+snapshot of 1.0.0 as published. To pin the exact code behind a result, cite the
+version DOI **and** report the platform version from that run's `manifest.json`.
 
 Also cite the **tools you actually used** — the versions for each run are in its
 `manifest.json`, and the per-stage references are in

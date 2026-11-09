@@ -117,7 +117,7 @@ def run_saintexpress(
     """Executa SAINTexpress-int nos arquivos gerados. Retorna o caminho de list.txt.
 
     Levanta FileNotFoundError com instrucao clara se o binario nao existir
-    (ele mora no conteiner de scoring; ver bonder/docker/Dockerfile.scoring).
+    (ele e compilado no conteiner de analise; ver docker/Dockerfile.analysis).
     """
     out_dir = Path(out_dir)
     exe = shutil.which(binary)

@@ -2,9 +2,10 @@
 # -*- coding: utf-8 -*-
 """runner.py - execucao dos scripts R de estatistica (DEP/limma, MSstats).
 
-Envolve o Rscript. Os scripts R vivem em bonder/R/ e rodam no conteiner de
-estatistica (Dockerfile.r). Em ambiente sem R, run_dep levanta erro claro; a
-preparacao de entradas (prepare.py) e a leitura de saidas continuam testaveis.
+Envolve o Rscript. Os scripts R vivem em R/ na raiz do repositorio (ver R_DIR
+abaixo) e rodam no conteiner de analise (docker/Dockerfile.analysis), que traz
+R/Bioconductor. Em ambiente sem R, run_dep levanta erro claro; a preparacao de
+entradas (prepare.py) e a leitura de saidas continuam testaveis.
 """
 from __future__ import annotations
 

@@ -1,53 +1,53 @@
 # =============================================================================
-# bonder - configuracao de GPU (NVIDIA CUDA) com fallback CPU garantido.
+# bonder - GPU configuration (NVIDIA CUDA) with a guaranteed CPU fallback.
 #
-# Prioridade de uso da GPU = ferramentas CONSAGRADAS e revisadas por pares.
-# ESM2 e exploratorio/suplementar: nao entra no escore de confianca que sustenta
-# a conclusao principal.
-# Todos os consumidores de GPU passam pelo gpu_gate (compartilhamento cooperativo
-# com outros processos que usam a placa, ex.: um servidor de LLM local).
+# GPU priority goes to ESTABLISHED, peer-reviewed tools.
+# ESM2 is exploratory/supplementary: it never feeds the confidence score that
+# supports the main conclusion.
+# Every GPU consumer goes through gpu_gate (cooperative sharing with other
+# processes using the card, e.g. a local LLM server).
 # =============================================================================
 schema_version: 1
 
 device:
-  # 'auto' decide por probe real de capacidade; 'cpu' forca CPU.
+  # 'auto' decides by a real capability probe; 'cpu' forces CPU.
   prefer: auto
-  # Compute capability minima exigida. (8, 6) = Ampere (ex.: RTX 30xx).
+  # Minimum compute capability required. (8, 6) = Ampere (e.g. RTX 30xx).
   min_capability: [8, 6]
 
 gpu_gate:
   enabled: true
-  # Nomes de processos de LLM que compartilham a placa (nao disparar em cima).
+  # Names of LLM processes sharing the card (do not start on top of them).
   llm_process_names: ["ollama", "llama"]
-  # VRAM livre minima exigida (MiB) para carregar o consumidor de GPU.
+  # Minimum free VRAM (MiB) required to load the GPU consumer.
   free_mb_required: 6000
-  # Fracao maxima da VRAM que um processo bonder pode reservar.
+  # Maximum fraction of VRAM a bonder process may reserve.
   per_process_memory_fraction: 0.6
   poll_seconds: 30
   max_wait_minutes: 120
 
-# --- Ferramentas GPU consagradas (padrao do pipeline) ------------------------
+# --- Established GPU tools (the pipeline default) ----------------------------
 diann:
-  # Busca DIA acelerada por GPU (Demichev et al., Nat Methods 2020).
-  enabled: false                     # ligar so se os dados forem DIA
-  binary: diann                      # dentro do conteiner GPU
+  # GPU-accelerated DIA search (Demichev et al., Nat Methods 2020).
+  enabled: false                     # enable only if the data are DIA
+  binary: diann                      # inside the GPU container
   threads: 8
 
 rescore:
-  # MS2Rescore + AlphaPeptDeep (rescoring por deep learning; +IDs a FDR fixo).
+  # MS2Rescore + AlphaPeptDeep (deep-learning rescoring; more IDs at fixed FDR).
   enabled: false
-  engine: ms2rescore                 # usa modelos peptdeep na GPU
+  engine: ms2rescore                 # uses peptdeep models on the GPU
 
 alphafold:
-  # Validacao estrutural isca-presa dos melhores candidatos (ColabFold/AF2-Multimer).
+  # Structural validation of the top bait-prey candidates (ColabFold/AF2-Multimer).
   enabled: false
-  top_n_candidates: 10               # so os N melhores por isca (custo/VRAM)
-  max_total_residues: 1400           # teto por complexo (ajuste a VRAM disponivel)
+  top_n_candidates: 10               # only the top N per bait (cost/VRAM)
+  max_total_residues: 1400           # ceiling per complex (tune to available VRAM)
 
-# --- Priorizacao exploratoria (SUPLEMENTAR, fora do nucleo de confianca) ------
+# --- Exploratory prioritisation (SUPPLEMENTARY, outside the confidence core) --
 esm2:
   enabled: false
   model_gpu: facebook/esm2_t33_650M_UR50D    # ~1.3GB fp16
-  model_cpu: facebook/esm2_t30_150M_UR50D    # fallback rapido em CPU
+  model_cpu: facebook/esm2_t30_150M_UR50D    # fast CPU fallback
   max_residues: 1022
   batch_size: 8

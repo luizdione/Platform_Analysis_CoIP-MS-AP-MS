@@ -1,42 +1,42 @@
 # =============================================================================
-# bonder - dependencias do NUCLEO (CPU). Testado em Python 3.11.
-# Ambiente alvo: conda (env `bonder`, ver environment.yml) ou Docker. GPU e R tem arquivos
-# proprios (requirements-gpu.txt e Dockerfile.r) para nao poluir o nucleo.
+# bonder - CORE dependencies (CPU). Tested on Python 3.11.
+# Target environment: conda (env `bonder`, see environment.yml) or Docker. GPU and R
+# have their own files (requirements-gpu.txt and docker/) to keep the core clean.
 # =============================================================================
 
-# --- Dados / numerico ---
+# --- Data / numeric ---
 numpy>=1.25,<3
 pandas>=2.0
-pyarrow>=14.0            # serializacao Parquet do MSDataset
+pyarrow>=14.0            # Parquet serialisation of the MSDataset
 scipy>=1.11
-networkx>=3.1           # rede de interacao
+networkx>=3.1           # interaction network
 
-# --- IO de espectrometria / config ---
-pyteomics>=4.6          # QC de mzML (opcional, lazy)
+# --- Mass-spectrometry IO / config ---
+pyteomics>=4.6          # mzML QC (optional, lazy import)
 pyyaml>=6.0
-requests>=2.31          # download reproduzivel dos bancos murinos
+requests>=2.31          # reproducible download of the mouse databases
 
-# --- Figuras ---
-matplotlib>=3.7         # volcano e QC (backend Agg)
+# --- Figures ---
+matplotlib>=3.7         # volcano and QC (Agg backend)
 
-# --- Web (dashboard Flask) ---
+# --- Web (Flask dashboard) ---
 flask>=2.3
-gunicorn>=21.0          # servidor no conteiner
+gunicorn>=21.0          # server inside the container
 
-# --- Fila de jobs (worker) ---
+# --- Job queue (worker) ---
 rq>=1.15
 redis>=5.0
 
-# --- Anotacao funcional (opcional) ---
+# --- Functional annotation (optional) ---
 gprofiler-official>=1.0 ; python_version >= "3.8"
 
 # =============================================================================
-# INSTALACAO:
-#   conda:  conda env create -f environment.yml           (cria o env 'bonder')
+# INSTALLATION:
+#   conda:  conda env create -f environment.yml           (creates the 'bonder' env)
 #   pip:    pip install -r requirements.txt
-#   docker: docker compose up   (recomendado; ver docker/)
+#   docker: docker compose up   (recommended; see docker/)
 #
-# Estatistica gold-standard roda no conteiner R (Dockerfile.r): DEP, limma,
-# MSstats (Bioconductor) + SAINTexpress. GPU roda no conteiner GPU
+# The gold-standard statistics run in the analysis container: DEP, limma,
+# MSstats (Bioconductor) + SAINTexpress. GPU runs in the GPU container
 # (requirements-gpu.txt): torch cu124, transformers, ms2rescore, peptdeep.
 # =============================================================================

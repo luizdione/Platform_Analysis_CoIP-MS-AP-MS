@@ -1,11 +1,11 @@
-name: publicar imagem no GHCR
+name: publish image to GHCR
 
-# Publica a imagem de analise como pacote publico de contêiner, ligado a este
-# repositorio. Dispara so quando voce quer: numa release publicada ou no botao
-# "Run workflow". Nao dispara a cada push.
+# Publishes the analysis image as a public container package linked to this
+# repository. It runs only when you want it to: on a published release or from
+# the "Run workflow" button. It does not run on every push.
 #
-# Usa o GITHUB_TOKEN da propria Action (permissions: packages: write) - nao
-# precisa de token pessoal.
+# It uses the Action's own GITHUB_TOKEN (permissions: packages: write) - no
+# personal token needed.
 
 on:
   release:
@@ -13,11 +13,11 @@ on:
   workflow_dispatch:
     inputs:
       ref:
-        description: "Git ref a construir (ex.: v1.0.1). Vazio = branch padrao."
+        description: "Git ref to build (e.g. v1.0.1). Empty = default branch."
         required: false
         default: ""
       tag:
-        description: "Tag da imagem (ex.: 1.0.1). Vazio = 'latest' apenas."
+        description: "Image tag (e.g. 1.0.1). Empty = 'latest' only."
         required: false
         default: ""
 
@@ -25,53 +25,53 @@ env:
   REGISTRY: ghcr.io
 
 jobs:
-  publicar:
+  publish:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
     steps:
-      # No disparo manual, 'ref' vazio pega o BRANCH PADRAO - e nao a tag da
-      # versao. Marcar uma imagem com um numero de versao a partir do branch faz
-      # a tag deixar de corresponder ao que foi lancado. Por isso: para publicar
-      # uma versao, informe a tag git em 'ref' (ex.: v1.0.1), ou publique pela
-      # release, que ja constroi do proprio ponto da tag.
+      # On a manual run, an empty 'ref' checks out the DEFAULT BRANCH - not the
+      # version tag. Tagging an image with a version number from the branch makes
+      # that tag stop matching what was released. So: to publish a version, give
+      # the git tag in 'ref' (e.g. v1.0.1), or publish from the release, which
+      # already builds from the tag's own commit.
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.ref || github.ref }}
 
-      - name: Recusar marcar versao a partir de ref movel
+      - name: Refuse to tag a version from a moving ref
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.tag != ''
         run: |
           set -eu
           ref='${{ github.event.inputs.ref }}'
           case "$ref" in
-            v*|refs/tags/*) echo "ok: construindo da tag '$ref'" ;;
+            v*|refs/tags/*) echo "ok: building from tag '$ref'" ;;
             *)
-              echo "ERRO: pedir a tag de imagem '${{ github.event.inputs.tag }}' sem informar"
-              echo "uma tag git em 'ref' marcaria uma versao com o conteudo do branch."
-              echo "Informe ref=v<versao>, ou publique pela release."
+              echo "ERROR: asking for image tag '${{ github.event.inputs.tag }}' without"
+              echo "a git tag in 'ref' would tag a version with the branch contents."
+              echo "Pass ref=v<version>, or publish from the release."
               exit 1 ;;
           esac
 
-      - name: Nome da imagem em minusculas
-        id: nome
-        run: echo "imagem=${REGISTRY}/$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
+      - name: Lowercase image name
+        id: name
+        run: echo "image=${REGISTRY}/$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
 
       - uses: docker/setup-buildx-action@v3
 
-      - name: Autenticar no GHCR
+      - name: Log in to GHCR
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Metadados (tags e labels)
+      - name: Metadata (tags and labels)
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ steps.nome.outputs.imagem }}
+          images: ${{ steps.name.outputs.image }}
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
@@ -83,7 +83,7 @@ jobs:
             org.opencontainers.image.licenses=LicenseRef-Platform_Analysis_CoIP-MS-AP-MS
             org.opencontainers.image.authors=Luiz Dione Barbosa De-Melo <luiz.melo@ifrj.edu.br>
 
-      - name: Construir e publicar
+      - name: Build and push
         uses: docker/build-push-action@v6
         with:
           context: .

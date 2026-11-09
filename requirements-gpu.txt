@@ -1,17 +1,17 @@
 # =============================================================================
-# bonder - dependencias de GPU (conteiner GPU, NVIDIA CUDA). Instale com o indice
-# de wheels CUDA 12.4 do PyTorch:
+# bonder - GPU dependencies (GPU container, NVIDIA CUDA). Install with PyTorch's
+# CUDA 12.4 wheel index:
 #   pip install -r requirements-gpu.txt --extra-index-url https://download.pytorch.org/whl/cu124
 #
-# Fallback CPU: troque por 'torch' do indice cpu (https://download.pytorch.org/whl/cpu).
-# Todas as libs abaixo sao de ferramentas revisadas por pares.
+# CPU fallback: swap for 'torch' from the cpu index (https://download.pytorch.org/whl/cpu).
+# Every library below belongs to a peer-reviewed tool.
 # =============================================================================
-torch>=2.3               # cu124 no conteiner GPU; cpu no fallback
+torch>=2.3               # cu124 in the GPU container; cpu on fallback
 transformers>=4.40       # ESM2 (priorizacao exploratoria, SUPLEMENTAR)
 
-# Rescoring por deep learning (opcional; +IDs a FDR fixo)
+# Deep-learning rescoring (optional; more IDs at fixed FDR)
 ms2rescore>=3.0
 peptdeep>=1.2            # AlphaPeptDeep (modelos MS2/RT na GPU)
 
-# NOTA: DIA-NN e ColabFold/AlphaFold2 NAO sao pip: sao instalados como binarios
-# no Dockerfile.gpu (ver docker/Dockerfile.gpu) ou apontados por PATH.
+# NOTE: DIA-NN and ColabFold/AlphaFold2 are NOT pip packages: they are installed
+# as binaries in Dockerfile.gpu (see docker/Dockerfile.gpu) or pointed to via PATH.

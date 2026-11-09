@@ -1,51 +1,51 @@
-# bonder - artefatos locais nao versionados
+# bonder - local artefacts, not versioned
 __pycache__/
 *.py[cod]
 *.egg-info/
 .pytest_cache/
 .mypy_cache/
 
-# dados de referencia baixados (grandes; reproduzidos por 'bonder db sync')
+# downloaded reference databases (large; reproduced by 'bonder db sync')
 data/
 
-# saidas de corridas
+# run outputs
 runs/
 
-# entradas do usuario (saidas de busca, .raw)
+# user inputs (search outputs, .raw)
 inputs/
 *.raw
 *.mzML
 *.d/
 
-# sequencias de iscas fornecidas pelo usuario (nao versionar sequencias privadas)
+# bait sequences supplied by the user (never version private sequences)
 config/sequences/*.fasta
 
-# parquet/artefatos intermediarios
+# parquet / intermediate artefacts
 *.parquet
 
-# ambientes
+# environments
 .venv/
 venv/
 .env
 
-# binarios externos vendored (nao versionar)
+# vendored external binaries (not versioned)
 vendor/bin/*
 !vendor/bin/.gitkeep
 
-# documentos administrativos locais do usuario (nao versionar)
+# user's local administrative documents (not versioned)
 formularios/
 
-# notas e memoria de trabalho local: nunca versionar neste repositorio
+# local notes and working memory: never version these in this repository
 .project-memory/
 *.local.md
 NOTAS_*.md
 
-# credenciais e tokens locais
+# local credentials and tokens
 .netrc
 *.pem
 *.key
 secrets/
 .*credentials*
 
-# override local do docker (caminhos da sua maquina)
+# local docker override (paths on your own machine)
 docker/docker-compose.local.yml

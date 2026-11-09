@@ -1,10 +1,10 @@
 # =============================================================================
-# bonder - imagem GPU (opcional): CUDA 12.4 + PyTorch cu124 + ferramentas de
-# deep learning consagradas. Usada apenas para etapas OPCIONAIS aceleradas na
-# GPU NVIDIA: DIA-NN (busca DIA), MS2Rescore/AlphaPeptDeep (rescoring) e a
-# priorizacao exploratoria ESM2. Todas com fallback CPU no codigo.
+# bonder - GPU image (optional): CUDA 12.4 + PyTorch cu124 + established deep
+# learning tools. Used only for OPTIONAL stages accelerated on an NVIDIA GPU:
+# DIA-NN (DIA search), MS2Rescore/AlphaPeptDeep (rescoring) and the exploratory
+# ESM2 prioritisation. All of them have a CPU fallback in the code.
 #
-# Runtime (nao devel): nao precisamos de compilador CUDA para os wheels do torch.
+# Runtime (not devel): the torch wheels need no CUDA compiler.
 # =============================================================================
 FROM nvidia/cuda:12.4.1-runtime-ubuntu22.04
 
@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 COPY requirements.txt requirements-gpu.txt /app/
-# torch cu124 + libs de rescoring/embeddings
+# torch cu124 + rescoring/embedding libraries
 RUN pip install --no-cache-dir -r requirements.txt \
     && pip install --no-cache-dir -r requirements-gpu.txt \
        --extra-index-url https://download.pytorch.org/whl/cu124
@@ -25,13 +25,13 @@ RUN pip install --no-cache-dir -r requirements.txt \
 COPY . /app
 RUN pip install --no-deps -e .
 
-# DIA-NN e ColabFold NAO sao pip. Para habilita-los, adicione os binarios ao PATH:
-#   - DIA-NN:    baixe o release Linux (aceite a licenca) e COPIE para /usr/local/bin/diann
-#   - ColabFold: instale colabfold_batch (localcolabfold) e exponha no PATH
-# Exemplo (descomente e ajuste a versao/licenca):
+# DIA-NN and ColabFold are NOT pip packages. To enable them, put the binaries on PATH:
+#   - DIA-NN:    download the Linux release (accept its licence) and COPY it to /usr/local/bin/diann
+#   - ColabFold: install colabfold_batch (localcolabfold) and expose it on PATH
+# Example (uncomment and adjust the version/licence):
 # COPY vendor/diann /usr/local/bin/diann
 
 ENV BONDER_DATA_ROOT=/data BONDER_RUNS_DIR=/runs
-# valida device (nunca deve quebrar; cai para CPU se sem GPU)
+# validate the device (must never fail; falls back to CPU with no GPU)
 RUN python -c "from bonder.gpu.detect import probe; print(probe().to_dict())" || true
 CMD ["python", "-c", "from bonder.gpu.detect import probe; print(probe().to_dict())"]

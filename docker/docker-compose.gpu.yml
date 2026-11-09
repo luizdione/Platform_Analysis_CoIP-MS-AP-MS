@@ -1,11 +1,11 @@
 # =============================================================================
-# bonder - overlay de GPU NVIDIA. Uso:
+# bonder - NVIDIA GPU overlay. Usage:
 #   docker compose -f docker-compose.yml -f docker-compose.gpu.yml up --build
 #
-# Requer NVIDIA Container Toolkit no host (Windows 11 + WSL2 ou Linux).
-# Adiciona o servico 'gpu' com as ferramentas aceleradas (DIA-NN, MS2Rescore,
-# AlphaPeptDeep, ESM2). O stack default (web/worker) continua CPU e sempre sobe;
-# o 'gpu' e usado sob demanda:
+# Requires the NVIDIA Container Toolkit on the host (Windows 11 + WSL2, or Linux).
+# It adds the 'gpu' service with the accelerated tools (DIA-NN, MS2Rescore,
+# AlphaPeptDeep, ESM2). The default stack (web/worker) stays on CPU and always
+# starts; 'gpu' is used on demand:
 #   docker compose ... run --rm gpu bonder --help
 #   docker compose ... run --rm gpu python -m bonder.gpu.tools ...
 # =============================================================================
@@ -17,7 +17,7 @@ services:
     environment:
       BONDER_DATA_ROOT: /data
       BONDER_RUNS_DIR: /runs
-      # compartilhamento cooperativo com o LLM local (Ollama) via gpu_gate
+      # cooperative sharing with a local LLM (Ollama) through gpu_gate
       PYTORCH_CUDA_ALLOC_CONF: expandable_segments:True
     volumes:
       - ./inputs:/inputs
@@ -30,5 +30,5 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
-    # nao sobe sozinho no 'up'; use 'run'/'--profile gpu'
+    # does not start on 'up'; use 'run' / '--profile gpu'
     profiles: ["gpu"]

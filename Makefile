@@ -1,15 +1,15 @@
-# bonder - atalhos de desenvolvimento e operacao
+# bonder - development and operation shortcuts
 .PHONY: help install test up up-gpu down dbsync baits qc lint
 
 help:
-	@echo "bonder - alvos disponiveis:"
-	@echo "  make install    instala o pacote + deps de dev (pip -e .[dev,web,ms])"
-	@echo "  make test       roda a suite de testes (nucleo CPU, sem GPU/R)"
-	@echo "  make up         sobe a plataforma (CPU) em http://localhost:8080"
-	@echo "  make up-gpu     sobe a plataforma com overlay de GPU NVIDIA"
-	@echo "  make down       derruba os conteineres"
-	@echo "  make dbsync     baixa/verifica os bancos murinos (bonder db sync)"
-	@echo "  make baits      valida iscas e monta o FASTA de busca"
+	@echo "bonder - available targets:"
+	@echo "  make install    install the package + dev deps (pip -e .[dev,web,ms])"
+	@echo "  make test       run the test suite (CPU core, no GPU/R)"
+	@echo "  make up         start the platform (CPU) at http://localhost:8080"
+	@echo "  make up-gpu     start the platform with the NVIDIA GPU overlay"
+	@echo "  make down       stop the containers"
+	@echo "  make dbsync     download/verify the mouse databases (bonder db sync)"
+	@echo "  make baits      validate baits and build the search FASTA"
 
 install:
 	pip install -e ".[dev,web,ms,annotate]"

@@ -1,8 +1,8 @@
-# Normaliza fim de linha: o repositorio guarda LF; o checkout respeita o SO.
+# Line-ending normalisation: the repository stores LF; checkout follows the OS.
 * text=auto
 
-# Arquivos que rodam dentro de contêiner Linux: SEMPRE LF, inclusive em clone
-# no Windows (CRLF quebra shebang e heredoc dentro da imagem).
+# Files that run inside a Linux container: ALWAYS LF, including on a Windows
+# clone (CRLF breaks the shebang and heredocs inside the image).
 Dockerfile*     text eol=lf
 *.sh            text eol=lf
 *.yml           text eol=lf
@@ -11,15 +11,15 @@ Makefile        text eol=lf
 *.R             text eol=lf
 *.cff           text eol=lf
 
-# Scripts do Windows: CRLF.
+# Windows scripts: CRLF.
 *.ps1           text eol=crlf
 *.bat           text eol=crlf
 *.cmd           text eol=crlf
 
-# Bibliotecas de terceiros: nao tocar (preserva byte a byte e o diff fica limpo).
+# Third-party libraries: do not touch (byte-for-byte, and the diff stays clean).
 bonder/web/static/vendor/** -text -diff linguist-vendored
 
-# Binarios.
+# Binaries.
 *.png           binary
 *.ico           binary
 *.pdf           binary

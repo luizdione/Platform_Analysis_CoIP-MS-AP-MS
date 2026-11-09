@@ -1,13 +1,13 @@
 # =============================================================================
-# bonder - orquestracao localhost (CPU por padrao; funciona em qualquer maquina).
+# bonder - localhost orchestration (CPU by default; works on any machine).
 #
 #   docker compose up --build
-#     -> dashboard em http://localhost:8080
+#     -> dashboard at http://localhost:8080
 #
-# Para habilitar a GPU NVIDIA, sobreponha com docker-compose.gpu.yml:
+# To enable an NVIDIA GPU, overlay docker-compose.gpu.yml:
 #   docker compose -f docker-compose.yml -f docker-compose.gpu.yml up --build
 #
-# Coloque suas saidas de busca em ./inputs (montado em /inputs nos conteineres).
+# Put your search outputs in ./inputs (mounted at /inputs in the containers).
 # =============================================================================
 name: bonder
 
@@ -35,7 +35,7 @@ services:
       - "8080:8080"
     volumes:
       - ./inputs:/inputs
-      - ./vendor/bin:/opt/bonder/bin    # escotilha p/ SAINTexpress-int manual (opcional)
+      - ./vendor/bin:/opt/bonder/bin    # hatch for a manual SAINTexpress-int (optional)
       - bonder-data:/data
       - bonder-runs:/runs
     depends_on:
@@ -59,7 +59,7 @@ services:
       BONDER_RUNS_DIR: /runs
     volumes:
       - ./inputs:/inputs
-      - ./vendor/bin:/opt/bonder/bin    # escotilha p/ SAINTexpress-int manual (opcional)
+      - ./vendor/bin:/opt/bonder/bin    # hatch for a manual SAINTexpress-int (optional)
       - bonder-data:/data
       - bonder-runs:/runs
     depends_on:

@@ -1,7 +1,8 @@
 # =============================================================================
-# bonder - imagem de ANALISE (CPU): Python + R/Bioconductor (DEP/limma/MSstats)
-# + SAINTexpress. Usada pelos servicos 'web' e 'worker'. Nada e reimplementado:
-# as estatisticas gold-standard rodam aqui via Rscript e SAINTexpress-int.
+# bonder - ANALYSIS image (CPU): Python + R/Bioconductor (DEP/limma/MSstats)
+# + SAINTexpress. Used by the 'web' and 'worker' services. Nothing is
+# reimplemented: the gold-standard statistics run here via Rscript and
+# SAINTexpress-int.
 # =============================================================================
 FROM mambaorg/micromamba:1.5.8
 
@@ -10,21 +11,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential ca-certificates git curl unzip \
     && rm -rf /var/lib/apt/lists/*
 
-# Ambiente conda reproduzivel (gold-standard tools: Python + R/Bioconductor)
+# Reproducible conda environment (gold-standard tools: Python + R/Bioconductor)
 COPY docker/environment-analysis.yml /tmp/env.yml
 RUN micromamba install -y -n base -f /tmp/env.yml && micromamba clean -a -y
-# /opt/bonder/bin no PATH: escotilha para montar um SAINTexpress-int do host
-# (volume) sem reconstruir a imagem.
+# /opt/bonder/bin on PATH: a hatch to mount a host SAINTexpress-int (volume)
+# without rebuilding the image.
 RUN mkdir -p /opt/bonder/bin
 ENV PATH=/opt/bonder/bin:/opt/conda/bin:$PATH
 
-# SAINTexpress: NAO existe em conda. Compila do codigo-fonte (SourceForge).
-# BEST-EFFORT e NAO-FATAL: se o download/build falhar (ex.: sem rede), a imagem
-# ainda sobe e a etapa SAINT e apenas 'pulada' em runtime (o pipeline tolera).
-# Release oficial (tar.gz). Compila com o script 'compile' de cada subdir, que
-# usa g++ + GSL (libgsl-dev, instalado acima). Usa o g++ de /usr/bin (nao o do
-# conda) para achar os headers da GSL do sistema.
-# GSL numa camada tardia (nao invalida o cache da camada pesada do R/conda).
+# SAINTexpress: NOT available in conda. Compiled from source (SourceForge).
+# BEST-EFFORT and NON-FATAL: if the download/build fails (e.g. no network), the
+# image still builds and the SAINT stage is simply 'skipped' at runtime (the
+# pipeline tolerates it). Official release (tar.gz), built with each subdir's
+# 'compile' script, which uses g++ + GSL (libgsl-dev, installed above). It uses
+# /usr/bin's g++ (not conda's) so it finds the system GSL headers.
+# GSL goes in a late layer (so it does not invalidate the heavy R/conda layer).
 RUN apt-get update && apt-get install -y --no-install-recommends libgsl-dev \
     && rm -rf /var/lib/apt/lists/*
 ARG SAINT_URL="https://sourceforge.net/projects/saint-apms/files/SAINTexpress_v3.6.3__2018-03-09.tar.gz/download"
@@ -37,19 +38,19 @@ RUN set -x; ( \
       && find /tmp/saint -type f \( -name 'SAINTexpress-int' -o -name 'SAINTexpress-spc' \) -perm -u+x -exec cp {} /usr/local/bin/ \; \
       && chmod +x /usr/local/bin/SAINTexpress-* \
       && rm -rf /tmp/saint /tmp/saint.tgz \
-    ) || echo "AVISO: SAINTexpress nao instalado automaticamente; etapa SAINT sera pulada (ver docs/COMO_RODAR.md)."
+    ) || echo "WARNING: SAINTexpress was not installed automatically; the SAINT stage will be skipped (see docs/COMO_RODAR.md)."
 
 WORKDIR /app
-# Instala o pacote bonder
+# Install the bonder package
 COPY . /app
 RUN pip install --no-deps -e . && python -c "import bonder; print('bonder', bonder.__version__)"
 
-# Confere R/Bioconductor (obrigatorio) e reporta SAINTexpress (opcional, nao-fatal)
+# Check R/Bioconductor (required) and report SAINTexpress (optional, non-fatal)
 RUN Rscript -e 'stopifnot(requireNamespace("DEP"), requireNamespace("limma"))' \
     && (command -v SAINTexpress-int && echo "SAINTexpress OK" \
         || echo "AVISO: SAINTexpress-int ausente; etapa SAINT sera pulada em runtime.")
 
 ENV BONDER_DATA_ROOT=/data BONDER_RUNS_DIR=/runs
 EXPOSE 8080
-# default: dashboard web (sobrescrito para 'worker' no compose)
+# default: the web dashboard (overridden to 'worker' in the compose file)
 CMD ["gunicorn", "-b", "0.0.0.0:8080", "-w", "2", "-t", "600", "bonder.web.app:create_app()"]

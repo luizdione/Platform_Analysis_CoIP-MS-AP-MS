@@ -1,19 +1,19 @@
 # =============================================================================
-# O que NUNCA entra na imagem de conteiner.
-# Primeiro: nada de dado de experimento, memoria de projeto ou credencial.
+# What NEVER goes into the container image.
+# First of all: no experimental data, no project memory, no credentials.
 # =============================================================================
 
-# --- git e metadados do repositorio ---
+# --- git and repository metadata ---
 .git
 .github
 .gitignore
 
-# --- notas e memoria de trabalho local (nao sao produto) ---
+# --- local notes and working memory (not the product) ---
 .project-memory/
 *.local.md
 NOTAS_*.md
 
-# --- dados do usuario: entradas, bancos baixados e saidas de corrida ---
+# --- user data: inputs, downloaded databases and run outputs ---
 data/
 runs/
 inputs/
@@ -28,12 +28,12 @@ proteinGroups.txt
 report.tsv
 combined_protein.tsv
 
-# --- sequencias de iscas fornecidas pelo usuario ---
+# --- bait sequences supplied by the user ---
 config/sequences/*.fasta
 *.fasta
 *.fa
 
-# --- credenciais e configuracao local (tokens de deploy, chaves, etc.) ---
+# --- credentials and local configuration (deploy tokens, keys, etc.) ---
 .env
 .env.*
 .netrc
@@ -44,7 +44,7 @@ secrets/
 .*credentials*
 docker/docker-compose.local.yml
 
-# --- caches e artefatos de build ---
+# --- caches and build artefacts ---
 **/__pycache__
 *.pyc
 *.pyo
@@ -57,11 +57,11 @@ dist/
 .venv
 venv
 
-# --- binarios externos vendored (baixados no build, nao copiados) ---
+# --- vendored external binaries (fetched at build time, not copied) ---
 vendor/bin/*
 !vendor/bin/.gitkeep
 
-# --- pesados/irrelevantes para a imagem ---
+# --- heavy or irrelevant for the image ---
 docs/*.pdf
 *.zip
 *.tar.gz

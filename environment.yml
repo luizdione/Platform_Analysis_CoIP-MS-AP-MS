@@ -1,9 +1,9 @@
 # =============================================================================
-# bonder - ambiente conda do projeto.
-# Cria o ambiente:            conda env create -f environment.yml    (nome: bonder)
-# Atualiza depois:            conda env update -n bonder -f environment.yml
-# Para instalar num env que voce ja tem:
-#                             conda env update -n SEU_ENV -f environment.yml
+# bonder - the project's conda environment.
+# Create it:                  conda env create -f environment.yml    (name: bonder)
+# Update it later:            conda env update -n bonder -f environment.yml
+# To install into an environment you already have:
+#                             conda env update -n YOUR_ENV -f environment.yml
 # =============================================================================
 name: bonder
 channels:
@@ -27,6 +27,6 @@ dependencies:
   - pip
   - pip:
       - gprofiler-official>=1.0
-# GPU (torch cu124, transformers, ms2rescore, peptdeep) e a estatistica R
-# (DEP/limma/MSstats + SAINTexpress) sao providos pelos conteineres dedicados
-# (docker/Dockerfile.gpu e docker/Dockerfile.analysis) para maxima reprodutibilidade.
+# GPU (torch cu124, transformers, ms2rescore, peptdeep) and the R statistics
+# (DEP/limma/MSstats + SAINTexpress) are provided by the dedicated containers
+# (docker/Dockerfile.gpu and docker/Dockerfile.analysis) for maximum reproducibility.
